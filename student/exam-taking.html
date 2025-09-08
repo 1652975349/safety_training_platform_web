@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试进行中 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+    <style>
+        .exam-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .exam-header {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .exam-info h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .exam-info p {
+            margin: 5px 0 0 0;
+            color: #666;
+        }
+        
+        .exam-timer {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .timer-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .timer-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .question-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-number {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .question-type {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .options-container {
+            margin-bottom: 30px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-item:hover {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+        
+        .option-item.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .option-letter {
+            background: #6c757d;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        .option-item.selected .option-letter {
+            background: #007bff;
+        }
+        
+        .option-text {
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .exam-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .question-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: 1px solid #dee2e6;
+            background: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submit-section {
+            text-align: right;
+        }
+        
+        .submit-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #c82333;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s ease;
+        }
+        
+        .camera-monitor {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            background: #000;
+            border-radius: 8px;
+            border: 2px solid #dc3545;
+            z-index: 1000;
+        }
+        
+        .camera-monitor video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        .camera-status {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            background: #dc3545;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .warning-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .warning-icon {
+            font-size: 24px;
+        }
+        
+        .warning-text {
+            flex: 1;
+        }
+        
+        .warning-text strong {
+            color: #856404;
+        }
+        
+        .warning-text small {
+            color: #856404;
+            display: block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 摄像头监控 -->
+    <div class="camera-monitor">
+        <div class="camera-status">🔴 监控中</div>
+        <video id="cameraVideo" autoplay muted></video>
+    </div>
+
+    <div class="exam-container">
+        <!-- 考试头部信息 -->
+        <div class="exam-header">
+            <div class="exam-info">
+                <h1 id="examTitle">安全生产基础知识考试</h1>
+                <p>正式考试 - 人脸识别防作弊已启用</p>
+            </div>
+            <div class="exam-timer">
+                <div class="timer-text" id="timer">60:00</div>
+                <div class="timer-label">剩余时间</div>
+            </div>
+        </div>
+        
+        <!-- 进度条 -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 20%"></div>
+        </div>
+        
+        <!-- 警告提示 -->
+        <div class="warning-banner">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-text">
+                <strong>考试进行中</strong>
+                <small>请保持面部在摄像头范围内，不得离开座位或使用任何作弊工具。系统将全程监控考试过程。</small>
+            </div>
+        </div>
+        
+        <!-- 题目容器 -->
+        <div class="question-container">
+            <div class="question-header">
+                <div class="question-number" id="questionNumber">第 1 题</div>
+                <div class="question-type" id="questionType">单选题</div>
+            </div>
+            
+            <div class="question-text" id="questionText">
+                根据《安全生产法》规定，生产经营单位的主要负责人对本单位的安全生产工作负有什么责任？
+            </div>
+            
+            <div class="options-container" id="optionsContainer">
+                <div class="option-item" onclick="selectOption(this, 'A')">
+                    <div class="option-letter">A</div>
+                    <div class="option-text">全面责任</div>
+                </div>
+                <div class="option-item" onclick="selectOption(this, 'B')">
+                    <div class="option-letter">B</div>
+                    <div class="option-text">主要责任</div>
+                </div>
+                <div class="option-item" onclick="selectOption(this, 'C')">
+                    <div class="option-letter">C</div>
+                    <div class="option-text">领导责任</div>
+                </div>
+                <div class="option-item" onclick="selectOption(this, 'D')">
+                    <div class="option-letter">D</div>
+                    <div class="option-text">管理责任</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考试控制 -->
+        <div class="exam-controls">
+            <div class="question-nav">
+                <button class="nav-btn" id="prevBtn" onclick="previousQuestion()" disabled>上一题</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">下一题</button>
+            </div>
+            
+            <div class="submit-section">
+                <button class="submit-btn" onclick="submitExam()">提交试卷</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 考试数据
+        let currentQuestion = 0;
+        let timeLeft = 3600; // 60分钟 = 3600秒
+        let timer;
+        let answers = {};
+        let examData = {
+            id: 'exam_001',
+            title: '安全生产基础知识考试',
+            duration: 60, // 分钟
+            questions: [
+                {
+                    id: 1,
+                    type: 'single',
+                    text: '根据《安全生产法》规定，生产经营单位的主要负责人对本单位的安全生产工作负有什么责任？',
+                    options: [
+                        { letter: 'A', text: '全面责任' },
+                        { letter: 'B', text: '主要责任' },
+                        { letter: 'C', text: '领导责任' },
+                        { letter: 'D', text: '管理责任' }
+                    ],
+                    correct: 'A'
+                },
+                {
+                    id: 2,
+                    type: 'single',
+                    text: '安全生产"三同时"制度是指什么？',
+                    options: [
+                        { letter: 'A', text: '同时设计、同时施工、同时投产使用' },
+                        { letter: 'B', text: '同时规划、同时建设、同时验收' },
+                        { letter: 'C', text: '同时设计、同时建设、同时验收' },
+                        { letter: 'D', text: '同时规划、同时施工、同时投产使用' }
+                    ],
+                    correct: 'A'
+                },
+                {
+                    id: 3,
+                    type: 'single',
+                    text: '发生生产安全事故后，事故现场有关人员应当立即向谁报告？',
+                    options: [
+                        { letter: 'A', text: '本单位负责人' },
+                        { letter: 'B', text: '当地政府' },
+                        { letter: 'C', text: '公安机关' },
+                        { letter: 'D', text: '消防部门' }
+                    ],
+                    correct: 'A'
+                },
+                {
+                    id: 4,
+                    type: 'single',
+                    text: '安全生产标准化建设的基本要求是什么？',
+                    options: [
+                        { letter: 'A', text: '全员参与、持续改进' },
+                        { letter: 'B', text: '领导重视、资金保障' },
+                        { letter: 'C', text: '制度完善、设备先进' },
+                        { letter: 'D', text: '人员培训、技术升级' }
+                    ],
+                    correct: 'A'
+                },
+                {
+                    id: 5,
+                    type: 'single',
+                    text: '危险化学品储存应当符合什么要求？',
+                    options: [
+                        { letter: 'A', text: '分类储存、标识清楚' },
+                        { letter: 'B', text: '集中储存、便于管理' },
+                        { letter: 'C', text: '分散储存、减少风险' },
+                        { letter: 'D', text: '露天储存、通风良好' }
+                    ],
+                    correct: 'A'
+                }
+            ]
+        };
+
+        // 初始化考试
+        function initExam() {
+            // 获取考试ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const examId = urlParams.get('id') || 'exam_001';
+            
+            // 设置考试标题
+            document.getElementById('examTitle').textContent = examData.title;
+            
+            // 启动摄像头
+            startCamera();
+            
+            // 开始计时
+            startTimer();
+            
+            // 显示第一题
+            showQuestion(0);
+            
+            // 更新进度条
+            updateProgress();
+        }
+
+        // 启动摄像头
+        function startCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        const video = document.getElementById('cameraVideo');
+                        video.srcObject = stream;
+                    })
+                    .catch(err => {
+                        console.error('摄像头启动失败:', err);
+                        alert('摄像头启动失败，请检查摄像头权限');
+                    });
+            }
+        }
+
+        // 开始计时
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    // 计算成绩
+                    let correctCount = 0;
+                    examData.questions.forEach(question => {
+                        if (answers[question.id] === question.correct) {
+                            correctCount++;
+                        }
+                    });
+                    
+                    const score = Math.round((correctCount / examData.questions.length) * 100);
+                    const isPassed = score >= 80;
+                    
+                    // 显示考试完成提醒
+                    const message = `考试时间到！\n\n您的成绩：${score}分\n${isPassed ? '恭喜您通过考试！' : '很遗憾，您未通过考试（及格分数：80分）'}\n\n点击确定返回考试中心`;
+                    
+                    alert(message);
+                    
+                    // 返回考试中心页面
+                    window.location.href = 'exams.html';
+                }
+            }, 1000);
+        }
+
+        // 更新计时器显示
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer').textContent = timeString;
+            
+            // 时间不足10分钟时变红色
+            if (timeLeft <= 600) {
+                document.getElementById('timer').style.color = '#dc3545';
+            }
+        }
+
+        // 显示题目
+        function showQuestion(index) {
+            const question = examData.questions[index];
+            
+            // 更新题目信息
+            document.getElementById('questionNumber').textContent = `第 ${index + 1} 题`;
+            document.getElementById('questionType').textContent = question.type === 'single' ? '单选题' : '多选题';
+            document.getElementById('questionText').textContent = question.text;
+            
+            // 更新选项
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option-item';
+                optionElement.onclick = () => selectOption(optionElement, option.letter);
+                
+                optionElement.innerHTML = `
+                    <div class="option-letter">${option.letter}</div>
+                    <div class="option-text">${option.text}</div>
+                `;
+                
+                // 如果已经选择过，标记为选中状态
+                if (answers[question.id] === option.letter) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // 更新导航按钮状态
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === examData.questions.length - 1;
+            
+            // 更新进度条
+            updateProgress();
+        }
+
+        // 选择答案
+        function selectOption(element, answer) {
+            // 移除其他选项的选中状态
+            const options = document.querySelectorAll('.option-item');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 设置当前选项为选中状态
+            element.classList.add('selected');
+            
+            // 保存答案
+            const questionId = examData.questions[currentQuestion].id;
+            answers[questionId] = answer;
+        }
+
+        // 上一题
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < examData.questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / examData.questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // 提交考试
+        function submitExam() {
+            if (confirm('确定要提交试卷吗？提交后将无法修改答案。')) {
+                clearInterval(timer);
+                
+                // 计算成绩
+                let correctCount = 0;
+                examData.questions.forEach(question => {
+                    if (answers[question.id] === question.correct) {
+                        correctCount++;
+                    }
+                });
+                
+                const score = Math.round((correctCount / examData.questions.length) * 100);
+                const isPassed = score >= 80;
+                
+                // 显示考试完成提醒
+                const message = `考试完成！\n\n您的成绩：${score}分\n${isPassed ? '恭喜您通过考试！' : '很遗憾，您未通过考试（及格分数：80分）'}\n\n点击确定返回考试中心`;
+                
+                alert(message);
+                
+                // 返回考试中心页面
+                window.location.href = 'exams.html';
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initExam);
+        
+        // 防止页面刷新或关闭
+        window.addEventListener('beforeunload', function(e) {
+            e.preventDefault();
+            e.returnValue = '考试进行中，确定要离开吗？';
+        });
+    </script>
+</body>
+</html>

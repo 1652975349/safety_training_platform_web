@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习资源 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+ <!-- 顶部通栏 - 直接嵌入 -->
+ <header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn active" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">张三</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="my-training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">我的培训</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="learning-resources.html" class="menu-link active">
+                <span class="menu-icon">📖</span>
+                <span class="menu-text">学习资源</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="exams.html" class="menu-link">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">考试中心</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="profile.html" class="menu-link">
+                <span class="menu-icon">👤</span>
+                <span class="menu-text">个人中心</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="points.html" class="menu-link">
+                <span class="menu-icon">⭐</span>
+                <span class="menu-text">积分中心</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知中心</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">学习资源</h1>
+            <p class="page-subtitle">视频/文档学习，学时和积分同步</p>
+        </div>
+        
+        <!-- 资源筛选 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                        <select class="form-control">
+                            <option value="">全部类型</option>
+                            <option value="video">视频</option>
+                            <option value="document">文档</option>
+                            <option value="ppt">PPT</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                        <select class="form-control">
+                            <option value="">全部分类</option>
+                            <option value="safety">安全生产</option>
+                            <option value="electrical">电气安全</option>
+                            <option value="fire">消防安全</option>
+                            <option value="chemical">化工安全</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                        <input type="text" class="form-control" placeholder="搜索资源名称">
+                    </div>
+                    <button class="btn btn-primary">🔍 搜索</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习统计 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📚</div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">累计学时(小时)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">⭐</div>
+                <div class="stat-number">2,580</div>
+                <div class="stat-label">累计积分</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📖</div>
+                <div class="stat-number">45</div>
+                <div class="stat-label">已学习资源</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">🎯</div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">待学习资源</div>
+            </div>
+        </div>
+        
+        <!-- 资源列表 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">学习资源</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    <!-- 资源卡片1 -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="position: relative;">
+                            <div style="width: 100%; height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                                🎥
+                            </div>
+                            <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                45分钟
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 15px;">
+                            <h4 style="margin-bottom: 10px;">安全生产基础知识视频</h4>
+                            <p style="color: #666; font-size: 14px; margin-bottom: 15px;">涵盖安全生产法律法规、安全管理制度等基础内容</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="badge badge-info">视频</span>
+                                <span style="color: #667eea; font-weight: bold;">+50积分</span>
+                            </div>
+                            <div class="progress" style="margin-bottom: 15px;">
+                                <div class="progress-bar" style="width: 75%"></div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="continueLearning('安全生产基础知识视频', 'video')">继续学习</button>
+                                <button class="btn btn-secondary btn-sm" onclick="viewResourceDetail('安全生产基础知识视频', 'video')">详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 资源卡片2 -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="position: relative;">
+                            <div style="width: 100%; height: 150px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                                📄
+                            </div>
+                            <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                30分钟
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 15px;">
+                            <h4 style="margin-bottom: 10px;">电气安全操作规程</h4>
+                            <p style="color: #666; font-size: 14px; margin-bottom: 15px;">电气设备操作安全规范、事故预防措施详细说明</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="badge badge-success">PDF</span>
+                                <span style="color: #28a745; font-weight: bold;">+30积分</span>
+                            </div>
+                            <div class="progress" style="margin-bottom: 15px;">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary btn-sm" style="flex: 1;">已完成</button>
+                                <button class="btn btn-warning btn-sm" onclick="restartLearning('电气安全操作规程', 'pdf')">重新学习</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 资源卡片3 -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="position: relative;">
+                            <div style="width: 100%; height: 150px; background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                                📊
+                            </div>
+                            <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                25分钟
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 15px;">
+                            <h4 style="margin-bottom: 10px;">消防安全培训PPT</h4>
+                            <p style="color: #666; font-size: 14px; margin-bottom: 15px;">消防器材使用、火灾逃生、应急处理知识</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="badge badge-warning">PPT</span>
+                                <span style="color: #ffc107; font-weight: bold;">+25积分</span>
+                            </div>
+                            <div class="progress" style="margin-bottom: 15px;">
+                                <div class="progress-bar" style="width: 30%"></div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="startLearning('消防安全培训PPT', 'ppt')">开始学习</button>
+                                <button class="btn btn-secondary btn-sm" onclick="viewResourceDetail('消防安全培训PPT', 'ppt')">详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 资源卡片4 -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="position: relative;">
+                            <div style="width: 100%; height: 150px; background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                                📝
+                            </div>
+                            <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                20分钟
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 15px;">
+                            <h4 style="margin-bottom: 10px;">化工安全知识文档</h4>
+                            <p style="color: #666; font-size: 14px; margin-bottom: 15px;">化工生产安全知识、危险化学品管理规范</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span class="badge badge-danger">Word</span>
+                                <span style="color: #dc3545; font-weight: bold;">+20积分</span>
+                            </div>
+                            <div class="progress" style="margin-bottom: 15px;">
+                                <div class="progress-bar" style="width: 0%"></div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="startLearning('化工安全知识文档', 'word')">开始学习</button>
+                                <button class="btn btn-secondary btn-sm" onclick="viewResourceDetail('化工安全知识文档', 'word')">详情</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习记录 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">学习记录</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>资源名称</th>
+                                <th>类型</th>
+                                <th>学习时间</th>
+                                <th>学时</th>
+                                <th>获得积分</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>安全生产基础知识视频</td>
+                                <td><span class="badge badge-info">视频</span></td>
+                                <td>2024-01-15 14:30</td>
+                                <td>0.75小时</td>
+                                <td>+50积分</td>
+                                <td><span class="badge badge-warning">学习中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="continueLearning('安全生产基础知识视频', 'video')">继续学习</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>电气安全操作规程</td>
+                                <td><span class="badge badge-success">PDF</span></td>
+                                <td>2024-01-14 10:20</td>
+                                <td>0.5小时</td>
+                                <td>+30积分</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="restartLearning('电气安全操作规程', 'pdf')">重新学习</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>消防安全培训PPT</td>
+                                <td><span class="badge badge-warning">PPT</span></td>
+                                <td>2024-01-13 16:45</td>
+                                <td>0.25小时</td>
+                                <td>+25积分</td>
+                                <td><span class="badge badge-warning">学习中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="continueLearning('消防安全培训PPT', 'ppt')">继续学习</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = 'dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = '../admin/dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+        
+        // 开始学习
+        function startLearning(resourceName, resourceType) {
+            // 跳转到资源详情页面
+            const params = new URLSearchParams({
+                name: resourceName,
+                type: resourceType
+            });
+            window.location.href = `resource-detail.html?${params.toString()}`;
+        }
+        
+        // 继续学习
+        function continueLearning(resourceName, resourceType) {
+            // 跳转到资源详情页面
+            const params = new URLSearchParams({
+                name: resourceName,
+                type: resourceType
+            });
+            window.location.href = `resource-detail.html?${params.toString()}`;
+        }
+        
+        // 重新学习
+        function restartLearning(resourceName, resourceType) {
+            if (confirm(`确定要重新学习"${resourceName}"吗？\n\n这将重置学习进度。`)) {
+                // 跳转到资源详情页面
+                const params = new URLSearchParams({
+                    name: resourceName,
+                    type: resourceType
+                });
+                window.location.href = `resource-detail.html?${params.toString()}`;
+            }
+        }
+        
+        // 查看资源详情
+        function viewResourceDetail(resourceName, resourceType) {
+            // 跳转到资源详情页面
+            const params = new URLSearchParams({
+                name: resourceName,
+                type: resourceType
+            });
+            window.location.href = `resource-detail.html?${params.toString()}`;
+        }
+        
+        // 更新学习进度
+        function updateLearningProgress(resourceName, progress) {
+            // 这里可以更新页面上的进度条
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach(bar => {
+                if (bar.closest('.card').querySelector('h4').textContent === resourceName) {
+                    bar.style.width = progress + '%';
+                }
+            });
+        }
+        
+        // 搜索资源
+        function searchResources() {
+            const searchInput = document.querySelector('input[placeholder="搜索资源名称"]');
+            const searchTerm = searchInput.value.trim();
+            
+            if (searchTerm === '') {
+                alert('请输入搜索关键词');
+                return;
+            }
+            
+            alert(`正在搜索"${searchTerm}"相关的学习资源...`);
+            // 这里可以实现搜索功能
+        }
+        
+        // 筛选资源
+        function filterResources() {
+            const typeSelect = document.querySelector('select');
+            const categorySelect = document.querySelectorAll('select')[1];
+            
+            const selectedType = typeSelect.value;
+            const selectedCategory = categorySelect.value;
+            
+            let filterText = '正在筛选资源：';
+            if (selectedType) filterText += ` 类型=${selectedType}`;
+            if (selectedCategory) filterText += ` 分类=${selectedCategory}`;
+            
+            alert(filterText);
+            // 这里可以实现筛选功能
+        }
+        
+        // 绑定搜索和筛选事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBtn = document.querySelector('button:contains("🔍 搜索")');
+            const typeSelect = document.querySelector('select');
+            const categorySelect = document.querySelectorAll('select')[1];
+            
+            if (searchBtn) {
+                searchBtn.addEventListener('click', searchResources);
+            }
+            
+            if (typeSelect) {
+                typeSelect.addEventListener('change', filterResources);
+            }
+            
+            if (categorySelect) {
+                categorySelect.addEventListener('change', filterResources);
+            }
+        });
+    </script>
+</body>
+</html>

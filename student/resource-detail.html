@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源详情 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+    <style>
+        .resource-player {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .video-container {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .document-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .learning-progress {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+        
+        .resource-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .resource-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .info-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .info-card p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部通栏 - 直接嵌入 -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">安全培训平台</div>
+            <div class="role-switcher">
+                <button class="role-btn active" onclick="switchRole('student')">学员端</button>
+                <button class="role-btn" onclick="switchRole('admin')">管理员端</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <span id="currentUser">张三</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">退出</button>
+        </div>
+    </header>
+    
+    <!-- 左侧菜单 - 直接嵌入 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li class="menu-item">
+                <a href="dashboard_simple.html" class="menu-link">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">首页</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="my-training.html" class="menu-link">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">我的培训</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="learning-resources.html" class="menu-link active">
+                    <span class="menu-icon">📖</span>
+                    <span class="menu-text">学习资源</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="exams.html" class="menu-link">
+                    <span class="menu-icon">📝</span>
+                    <span class="menu-text">考试中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="profile.html" class="menu-link">
+                    <span class="menu-icon">👤</span>
+                    <span class="menu-text">个人中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="points.html" class="menu-link">
+                    <span class="menu-icon">⭐</span>
+                    <span class="menu-text">积分中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="notifications.html" class="menu-link">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-text">通知中心</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="btn btn-secondary" onclick="goBack()">← 返回</button>
+                <div>
+                    <h1 class="page-title">资源详情</h1>
+                    <p class="page-subtitle" id="resourceTitle">安全生产基础知识视频</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习进度 -->
+        <div class="learning-progress">
+            <div class="progress-circle" id="progressCircle">75%</div>
+            <div style="text-align: center;">
+                <h3 style="margin: 0 0 10px 0;">学习进度</h3>
+                <p style="margin: 0; opacity: 0.9;">您已完成 75% 的学习内容</p>
+            </div>
+        </div>
+        
+        <!-- 资源播放器 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">学习内容</h2>
+                <div>
+                    <span class="badge badge-info" id="resourceType">视频</span>
+                    <span class="badge badge-success" id="resourceDuration">45分钟</span>
+                </div>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <!-- 视频播放器 -->
+                <div id="videoPlayer" class="resource-player" style="display: block;">
+                    <div class="video-container">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🎥</div>
+                            <div>安全生产基础知识视频</div>
+                            <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">点击开始学习</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文档查看器 -->
+                <div id="documentViewer" class="document-container" style="display: none;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📄</div>
+                        <div>文档内容</div>
+                        <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">点击查看文档内容</div>
+                    </div>
+                </div>
+                
+                <!-- PPT查看器 -->
+                <div id="pptViewer" class="document-container" style="display: none;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+                        <div>PPT演示文稿</div>
+                        <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">点击查看PPT内容</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 资源信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">资源信息</h2>
+            </div>
+            <div class="card-body">
+                <div class="resource-info-grid">
+                    <div class="info-card">
+                        <h4>📚 学时要求</h4>
+                        <p id="infoHours">0.75小时</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>⭐ 积分奖励</h4>
+                        <p id="infoPoints">50积分</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>🎯 难度等级</h4>
+                        <p id="infoDifficulty">简单</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>📂 分类</h4>
+                        <p id="infoCategory">安全生产</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>📅 发布时间</h4>
+                        <p id="infoPublishDate">2024-01-10</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>👥 学习人数</h4>
+                        <p id="infoLearners">156人</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h4>📝 资源描述</h4>
+                    <p id="resourceDescription" style="color: #666; line-height: 1.6; margin-top: 10px;">
+                        涵盖安全生产法律法规、安全管理制度等基础内容，适用于所有长维人员。通过本课程的学习，您将掌握安全生产的基本知识和技能。
+                    </p>
+                </div>
+                
+        
+            </div>
+        </div>
+        
+    
+        
+        <!-- 操作按钮 -->
+        <div class="card">
+            <div class="card-body">
+                <div class="resource-actions">
+                    <button class="btn btn-warning" onclick="restartLearning()">🔄 重新学习</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLearning = false;
+        let learningProgress = 75; // 当前学习进度
+        
+        // 页面加载时从URL参数获取资源信息
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            const type = urlParams.get('type');
+            
+            if (name) {
+                document.getElementById('resourceTitle').textContent = name;
+            }
+            
+            if (type) {
+                const typeMap = {
+                    'video': '视频',
+                    'ppt': 'PPT',
+                    'pdf': 'PDF',
+                    'word': 'Word',
+                    'excel': 'Excel'
+                };
+                
+                const typeText = typeMap[type.toLowerCase()] || type;
+                document.getElementById('resourceType').textContent = typeText;
+                
+                // 根据类型显示相应的查看器
+                showViewerByType(type.toLowerCase());
+                
+                // 根据进度显示相应的按钮
+                updateActionButtons();
+            }
+        });
+        
+        // 根据类型显示查看器
+        function showViewerByType(type) {
+            // 隐藏所有查看器
+            document.getElementById('videoPlayer').style.display = 'none';
+            document.getElementById('documentViewer').style.display = 'none';
+            document.getElementById('pptViewer').style.display = 'none';
+            
+            // 显示对应的查看器
+            if (type === 'video') {
+                document.getElementById('videoPlayer').style.display = 'block';
+            } else if (type === 'ppt') {
+                document.getElementById('pptViewer').style.display = 'block';
+            } else {
+                document.getElementById('documentViewer').style.display = 'block';
+            }
+        }
+        
+        // 更新操作按钮
+        function updateActionButtons() {
+            const startBtn = document.getElementById('startBtn');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            if (learningProgress > 0 && learningProgress < 100) {
+                startBtn.style.display = 'none';
+                continueBtn.style.display = 'inline-block';
+            } else if (learningProgress >= 100) {
+                startBtn.textContent = '✅ 已完成';
+                startBtn.disabled = true;
+                continueBtn.style.display = 'none';
+            }
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+        
+        // 开始学习
+        function startLearning() {
+            if (confirm('确定要开始学习这个资源吗？')) {
+                isLearning = true;
+                alert('正在加载学习内容...');
+                setTimeout(() => {
+                    alert('学习内容加载完成！开始学习吧！');
+                    // 这里可以跳转到学习页面或开始播放
+                    simulateLearning();
+                }, 1000);
+            }
+        }
+        
+        // 继续学习
+        function continueLearning() {
+            if (confirm('确定要继续学习吗？')) {
+                isLearning = true;
+                alert('正在恢复学习进度...');
+                setTimeout(() => {
+                    alert('学习进度已恢复！');
+                    simulateLearning();
+                }, 1000);
+            }
+        }
+        
+        // 重新学习
+        function restartLearning() {
+            if (confirm('确定要重新学习吗？\n\n这将重置您的学习进度。')) {
+                learningProgress = 0;
+                updateProgress();
+                updateActionButtons();
+                alert('学习进度已重置！');
+            }
+        }
+        
+        // 下载资源
+        function downloadResource() {
+            const resourceName = document.getElementById('resourceTitle').textContent;
+            if (confirm(`确定要下载资源"${resourceName}"吗？`)) {
+                alert('正在下载资源...');
+                setTimeout(() => {
+                    alert('资源下载完成！');
+                }, 1000);
+            }
+        }
+        
+        // 添加到收藏
+        function addToFavorites() {
+            const resourceName = document.getElementById('resourceTitle').textContent;
+            alert(`已将"${resourceName}"添加到收藏夹！`);
+        }
+        
+        // 分享资源
+        function shareResource() {
+            const resourceName = document.getElementById('resourceTitle').textContent;
+            const shareUrl = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: resourceName,
+                    text: '查看这个学习资源',
+                    url: shareUrl
+                });
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('分享链接已复制到剪贴板！');
+                });
+            }
+        }
+        
+        // 模拟学习过程
+        function simulateLearning() {
+            const interval = setInterval(() => {
+                if (!isLearning) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                learningProgress += 5;
+                if (learningProgress > 100) {
+                    learningProgress = 100;
+                    isLearning = false;
+                    clearInterval(interval);
+                    alert('恭喜！您已完成学习！');
+                }
+                
+                updateProgress();
+                updateActionButtons();
+            }, 2000);
+        }
+        
+        // 更新进度显示
+        function updateProgress() {
+            document.getElementById('progressCircle').textContent = learningProgress + '%';
+            
+            // 更新进度条
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach(bar => {
+                bar.style.width = learningProgress + '%';
+            });
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = 'dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = '../admin/dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>

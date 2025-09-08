@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试中心 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 顶部通栏 - 直接嵌入 -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">安全培训平台</div>
+            <div class="role-switcher">
+                <button class="role-btn active" onclick="switchRole('student')">学员端</button>
+                <button class="role-btn" onclick="switchRole('admin')">管理员端</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <span id="currentUser">张三</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">退出</button>
+        </div>
+    </header>
+    
+    <!-- 左侧菜单 - 直接嵌入 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li class="menu-item">
+                <a href="dashboard_simple.html" class="menu-link">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">首页</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="my-training.html" class="menu-link">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">我的培训</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="learning-resources.html" class="menu-link">
+                    <span class="menu-icon">📖</span>
+                    <span class="menu-text">学习资源</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="exams.html" class="menu-link active">
+                    <span class="menu-icon">📝</span>
+                    <span class="menu-text">考试中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="profile.html" class="menu-link">
+                    <span class="menu-icon">👤</span>
+                    <span class="menu-text">个人中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="points.html" class="menu-link">
+                    <span class="menu-icon">⭐</span>
+                    <span class="menu-text">积分中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="notifications.html" class="menu-link">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-text">通知中心</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">考试中心</h1>
+            <p class="page-subtitle">模拟考试不限次数，正式考试人脸防作弊</p>
+        </div>
+        
+        <!-- 考试统计 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📝</div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">待考试</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-number">15</div>
+                <div class="stat-label">已通过</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">🔄</div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">可补考</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">📊</div>
+                <div class="stat-number">87%</div>
+                <div class="stat-label">通过率</div>
+            </div>
+        </div>
+        
+        <!-- 考试类型切换 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-primary active" onclick="switchExamType('formal')">正式考试</button>
+                    <button class="btn btn-secondary" onclick="switchExamType('mock')">模拟考试</button>
+                    <button class="btn btn-secondary" onclick="switchExamType('history')">考试记录</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 正式考试列表 -->
+        <div class="card" id="formalExams">
+            <div class="card-header">
+                <h2 class="card-title">正式考试</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>考试名称</th>
+                                <th>考试时间</th>
+                                <th>时长</th>
+                                <th>题目数量</th>
+                                <th>及格分数</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>安全生产基础知识考试</strong>
+                                        <br>
+                                        <small class="text-muted">涵盖安全生产法律法规、安全管理制度等</small>
+                                    </div>
+                                </td>
+                                <td>2024-01-20 14:00-15:00</td>
+                                <td>60分钟</td>
+                                <td>50题</td>
+                                <td>80分</td>
+                                <td><span class="badge badge-danger">待考试</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startExam(1)">开始考试</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamDetail(1, '安全生产基础知识考试')">查看详情</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>电气安全操作规程考试</strong>
+                                        <br>
+                                        <small class="text-muted">电气设备操作安全规范、事故预防措施</small>
+                                    </div>
+                                </td>
+                                <td>2024-01-22 09:00-10:00</td>
+                                <td>60分钟</td>
+                                <td>40题</td>
+                                <td>80分</td>
+                                <td><span class="badge badge-danger">待考试</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startExam(2)">开始考试</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamDetail(2, '电气安全操作规程考试')">查看详情</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>消防安全考试</strong>
+                                        <br>
+                                        <small class="text-muted">消防器材使用、火灾逃生、应急处理</small>
+                                    </div>
+                                </td>
+                                <td>2024-01-25 10:00-11:00</td>
+                                <td>60分钟</td>
+                                <td>45题</td>
+                                <td>80分</td>
+                                <td><span class="badge badge-danger">待考试</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startExam(3)">开始考试</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamDetail(3, '消防安全考试')">查看详情</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 模拟考试列表 -->
+        <div class="card" id="mockExams" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title">模拟考试</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>考试名称</th>
+                                <th>题目数量</th>
+                                <th>时长</th>
+                                <th>最近成绩</th>
+                                <th>考试次数</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>安全生产基础知识模拟考试</strong>
+                                        <br>
+                                        <small class="text-muted">不限次数，随时练习</small>
+                                    </div>
+                                </td>
+                                <td>50题</td>
+                                <td>60分钟</td>
+                                <td>92分</td>
+                                <td>5次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startMockExam(1)">开始模拟</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamHistory(1, '安全生产基础知识模拟考试')">查看历史</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>电气安全模拟考试</strong>
+                                        <br>
+                                        <small class="text-muted">不限次数，随时练习</small>
+                                    </div>
+                                </td>
+                                <td>40题</td>
+                                <td>60分钟</td>
+                                <td>88分</td>
+                                <td>3次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startMockExam(2)">开始模拟</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamHistory(2, '电气安全模拟考试')">查看历史</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>消防安全模拟考试</strong>
+                                        <br>
+                                        <small class="text-muted">不限次数，随时练习</small>
+                                    </div>
+                                </td>
+                                <td>45题</td>
+                                <td>60分钟</td>
+                                <td>85分</td>
+                                <td>2次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startMockExam(3)">开始模拟</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamHistory(3, '消防安全模拟考试')">查看历史</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考试记录 -->
+        <div class="card" id="examHistory" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title">考试记录</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>考试名称</th>
+                                <th>类型</th>
+                                <th>考试时间</th>
+                                <th>用时</th>
+                                <th>成绩</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>安全生产基础知识考试</td>
+                                <td><span class="badge badge-info">正式考试</span></td>
+                                <td>2024-01-15 14:30</td>
+                                <td>45分钟</td>
+                                <td>85分</td>
+                                <td><span class="badge badge-success">已通过</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamResult(1, '安全生产基础知识考试')">查看详情</button>
+                                    <button class="btn btn-warning btn-sm" onclick="retakeExam(1, '安全生产基础知识考试')">重新考试</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>电气安全模拟考试</td>
+                                <td><span class="badge badge-warning">模拟考试</span></td>
+                                <td>2024-01-14 10:30</td>
+                                <td>38分钟</td>
+                                <td>92分</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamResult(2, '电气安全模拟考试')">查看详情</button>
+                                    <button class="btn btn-primary btn-sm" onclick="practiceAgain(2, '电气安全模拟考试')">再次练习</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>消防安全考试</td>
+                                <td><span class="badge badge-info">正式考试</span></td>
+                                <td>2024-01-12 09:15</td>
+                                <td>52分钟</td>
+                                <td>75分</td>
+                                <td><span class="badge badge-danger">未通过</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamResult(3, '消防安全考试')">查看详情</button>
+                                    <button class="btn btn-warning btn-sm" onclick="applyRetake(3, '消防安全考试')">申请补考</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 人脸识别提示 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <div style="font-size: 24px;">🔒</div>
+                    <div>
+                        <strong>人脸识别防作弊提醒</strong>
+                        <br>
+                        <small>正式考试将启用人脸识别功能，请确保：</small>
+                        <ul style="margin: 5px 0 0 20px; font-size: 12px;">
+                            <li>摄像头正常工作</li>
+                            <li>光线充足，面部清晰可见</li>
+                            <li>考试过程中保持面部在摄像头范围内</li>
+                            <li>不得使用任何作弊工具</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 考试类型切换
+        function switchExamType(type) {
+            // 重置按钮状态
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('btn-secondary');
+            });
+            
+            // 设置当前按钮为激活状态
+            event.target.classList.add('active');
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-primary');
+            
+            // 显示对应内容
+            document.getElementById('formalExams').style.display = 'none';
+            document.getElementById('mockExams').style.display = 'none';
+            document.getElementById('examHistory').style.display = 'none';
+            
+            if (type === 'formal') {
+                document.getElementById('formalExams').style.display = 'block';
+            } else if (type === 'mock') {
+                document.getElementById('mockExams').style.display = 'block';
+            } else if (type === 'history') {
+                document.getElementById('examHistory').style.display = 'block';
+            }
+        }
+        
+        // 开始正式考试
+        function startExam(examId) {
+            if (confirm('确定要开始正式考试吗？考试过程中将启用人脸识别防作弊功能。')) {
+                // 检查摄像头
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(() => {
+                            // 跳转到考试页面
+                            window.location.href = `exam-taking.html?id=${examId}`;
+                        })
+                        .catch(() => {
+                            alert('摄像头检查失败，请确保摄像头正常工作后再开始考试。');
+                        });
+                } else {
+                    alert('浏览器不支持摄像头功能，请使用现代浏览器。');
+                }
+            }
+        }
+        
+        // 开始模拟考试
+        function startMockExam(examId) {
+            if (confirm('确定要开始模拟考试吗？模拟考试不计入正式成绩。')) {
+                // 跳转到模拟考试页面
+                window.location.href = `mock-exam.html?id=${examId}`;
+            }
+        }
+        
+        // 查看考试详情
+        function viewExamDetail(examId, examName) {
+            // 跳转到考试详情页面
+            const params = new URLSearchParams({
+                id: examId,
+                name: examName
+            });
+            window.location.href = `exam-detail.html?${params.toString()}`;
+        }
+        
+        // 查看考试历史
+        function viewExamHistory(examId, examName) {
+            // 跳转到考试历史页面
+            const params = new URLSearchParams({
+                id: examId,
+                name: examName
+            });
+            window.location.href = `exam-history.html?${params.toString()}`;
+        }
+        
+        // 查看考试详情（历史记录）
+        function viewExamResult(examId, examName) {
+            // 跳转到考试结果页面
+            const params = new URLSearchParams({
+                id: examId,
+                name: examName
+            });
+            window.location.href = `exam-result.html?${params.toString()}`;
+        }
+        
+        // 重新考试
+        function retakeExam(examId, examName) {
+            if (confirm(`确定要重新参加"${examName}"考试吗？`)) {
+                startExam(examId);
+            }
+        }
+        
+        // 申请补考
+        function applyRetake(examId, examName) {
+            if (confirm(`确定要申请"${examName}"的补考吗？`)) {
+                alert('正在提交补考申请...');
+                setTimeout(() => {
+                    alert('补考申请已提交，请等待管理员审核。');
+                }, 1000);
+            }
+        }
+        
+        // 再次练习
+        function practiceAgain(examId, examName) {
+            if (confirm(`确定要再次练习"${examName}"吗？`)) {
+                startMockExam(examId);
+            }
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = 'dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = '../admin/dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学员首页 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 顶部通栏 - 直接嵌入 -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">安全培训平台</div>
+            <div class="role-switcher">
+                <button class="role-btn active" onclick="switchRole('student')">学员端</button>
+                <button class="role-btn" onclick="switchRole('admin')">管理员端</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <span id="currentUser">张三</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">退出</button>
+        </div>
+    </header>
+    
+    <!-- 左侧菜单 - 直接嵌入 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li class="menu-item">
+                <a href="dashboard_simple.html" class="menu-link active">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">首页</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="my-training.html" class="menu-link">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">我的培训</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="learning-resources.html" class="menu-link">
+                    <span class="menu-icon">📖</span>
+                    <span class="menu-text">学习资源</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="exams.html" class="menu-link">
+                    <span class="menu-icon">📝</span>
+                    <span class="menu-text">考试中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="profile.html" class="menu-link">
+                    <span class="menu-icon">👤</span>
+                    <span class="menu-text">个人中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="points.html" class="menu-link">
+                    <span class="menu-icon">⭐</span>
+                    <span class="menu-text">积分中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="notifications.html" class="menu-link">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-text">通知中心</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">学员首页</h1>
+            <p class="page-subtitle">欢迎回来，这里是您的学习概览</p>
+        </div>
+        
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📚</div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">进行中课程</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">⏱️</div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">累计学时(小时)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">⭐</div>
+                <div class="stat-number">2,580</div>
+                <div class="stat-label">当前积分</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">📝</div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">待考试</div>
+            </div>
+        </div>
+        
+        <!-- 我的培训 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">我的培训</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>课程名称</th>
+                                <th>类型</th>
+                                <th>进度</th>
+                                <th>学时</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>安全生产基础知识</td>
+                                <td><span class="badge badge-info">必修</span></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 75%"></div>
+                                    </div>
+                                    <small>75%</small>
+                                </td>
+                                <td>8小时</td>
+                                <td><span class="badge badge-warning">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="continueLearning('training_001', '安全生产基础知识')">继续学习</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>电气安全操作规程</td>
+                                <td><span class="badge badge-info">必修</span></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                    <small>100%</small>
+                                </td>
+                                <td>6小时</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewCertificate('training_002', '电气安全操作规程')">查看证书</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>消防安全培训</td>
+                                <td><span class="badge badge-warning">选修</span></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 30%"></div>
+                                    </div>
+                                    <small>30%</small>
+                                </td>
+                                <td>4小时</td>
+                                <td><span class="badge badge-warning">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="continueLearning('training_003', '消防安全培训')">继续学习</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 最近考试 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">最近考试</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>考试名称</th>
+                                <th>类型</th>
+                                <th>考试时间</th>
+                                <th>成绩</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>安全生产基础知识考试</td>
+                                <td><span class="badge badge-info">正式考试</span></td>
+                                <td>2024-01-20 14:00-15:00</td>
+                                <td>85分</td>
+                                <td><span class="badge badge-success">已通过</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewExamDetail('exam_001', '安全生产基础知识考试')">查看详情</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>电气安全操作规程考试</td>
+                                <td><span class="badge badge-info">正式考试</span></td>
+                                <td>2024-01-22 09:00-10:00</td>
+                                <td>-</td>
+                                <td><span class="badge badge-danger">待考试</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startExam('exam_002', '电气安全操作规程考试')">开始考试</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>消防安全考试</td>
+                                <td><span class="badge badge-info">正式考试</span></td>
+                                <td>2024-01-25 10:00-11:00</td>
+                                <td>-</td>
+                                <td><span class="badge badge-danger">待考试</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startExam('exam_003', '消防安全考试')">开始考试</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习排行 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">学习排行</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>姓名</th>
+                                <th>部门</th>
+                                <th>积分</th>
+                                <th>学时</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #fff3cd;">
+                                <td>🥇</td>
+                                <td><strong>张三</strong></td>
+                                <td>生产部</td>
+                                <td><strong>2,580</strong></td>
+                                <td><strong>156小时</strong></td>
+                            </tr>
+                            <tr>
+                                <td>🥈</td>
+                                <td>李四</td>
+                                <td>技术部</td>
+                                <td>2,450</td>
+                                <td>142小时</td>
+                            </tr>
+                            <tr>
+                                <td>🥉</td>
+                                <td>王五</td>
+                                <td>安全部</td>
+                                <td>2,320</td>
+                                <td>138小时</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>赵六</td>
+                                <td>生产部</td>
+                                <td>2,180</td>
+                                <td>125小时</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>钱七</td>
+                                <td>技术部</td>
+                                <td>2,050</td>
+                                <td>118小时</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = 'dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = '../admin/dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+        
+        // 继续学习
+        function continueLearning(trainingId, trainingName) {
+            // 跳转到培训详情页面，与my-training.html保持一致
+            sessionStorage.setItem('currentTrainingId', trainingId);
+            sessionStorage.setItem('currentTrainingName', trainingName);
+            window.location.href = 'training-detail.html';
+        }
+        
+        // 查看证书
+        function viewCertificate(trainingId, trainingName) {
+            // 跳转到证书查看页面
+            sessionStorage.setItem('currentTrainingId', trainingId);
+            sessionStorage.setItem('currentTrainingName', trainingName);
+            window.location.href = 'certificate.html';
+        }
+        
+        // 查看考试详情
+        function viewExamDetail(examId, examName) {
+            // 跳转到考试详情页面
+            sessionStorage.setItem('currentExamId', examId);
+            sessionStorage.setItem('currentExamName', examName);
+            window.location.href = 'exam-detail.html';
+        }
+        
+        // 重新考试
+        function retakeExam(examId, examName) {
+            if (confirm(`确定要重新参加考试"${examName}"吗？`)) {
+                // 跳转到模拟考试页面
+                sessionStorage.setItem('currentExamId', examId);
+                sessionStorage.setItem('currentExamName', examName);
+                window.location.href = 'mock-exam.html';
+            }
+        }
+        
+        // 开始考试
+        function startExam(examId, examName) {
+            if (confirm(`确定要开始考试"${examName}"吗？考试开始后将计时，请确保网络稳定。`)) {
+                // 检查摄像头
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(() => {
+                            // 跳转到考试页面
+                            sessionStorage.setItem('currentExamId', examId);
+                            sessionStorage.setItem('currentExamName', examName);
+                            window.location.href = 'exam-taking.html';
+                        })
+                        .catch(() => {
+                            alert('摄像头检查失败，请确保摄像头正常工作后再开始考试。');
+                        });
+                } else {
+                    alert('浏览器不支持摄像头功能，请使用现代浏览器。');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

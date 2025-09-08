@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考试详情 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 顶部通栏 - 直接嵌入 -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">安全培训平台</div>
+            <div class="role-switcher">
+                <button class="role-btn active" onclick="switchRole('student')">学员端</button>
+                <button class="role-btn" onclick="switchRole('admin')">管理员端</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <span id="currentUser">张三</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">退出</button>
+        </div>
+    </header>
+    
+    <!-- 左侧菜单 - 直接嵌入 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li class="menu-item">
+                <a href="dashboard_simple.html" class="menu-link">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">首页</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="my-training.html" class="menu-link">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">我的培训</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="learning-resources.html" class="menu-link">
+                    <span class="menu-icon">📖</span>
+                    <span class="menu-text">学习资源</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="exams.html" class="menu-link active">
+                    <span class="menu-icon">📝</span>
+                    <span class="menu-text">考试中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="profile.html" class="menu-link">
+                    <span class="menu-icon">👤</span>
+                    <span class="menu-text">个人中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="points.html" class="menu-link">
+                    <span class="menu-icon">⭐</span>
+                    <span class="menu-text">积分中心</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="notifications.html" class="menu-link">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-text">通知中心</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="btn btn-secondary" onclick="goBack()">← 返回</button>
+                <div>
+                    <h1 class="page-title">考试详情</h1>
+                    <p class="page-subtitle">安全生产基础知识考试</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考试基本信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">考试信息</h2>
+                <div>
+                    <span class="badge badge-danger">待考试</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <label class="form-label">考试名称</label>
+                        <p class="form-control-static">安全生产基础知识考试</p>
+                    </div>
+                    <div>
+                        <label class="form-label">考试类型</label>
+                        <p class="form-control-static"><span class="badge badge-danger">正式考试</span></p>
+                    </div>
+                    <div>
+                        <label class="form-label">考试时长</label>
+                        <p class="form-control-static">60分钟</p>
+                    </div>
+                    <div>
+                        <label class="form-label">题目数量</label>
+                        <p class="form-control-static">50题</p>
+                    </div>
+                    <div>
+                        <label class="form-label">及格分数</label>
+                        <p class="form-control-static">60分</p>
+                    </div>
+                    <div>
+                        <label class="form-label">考试次数</label>
+                        <p class="form-control-static">3次</p>
+                    </div>
+                    <div>
+                        <label class="form-label">开始时间</label>
+                        <p class="form-control-static">2024-01-16 09:00</p>
+                    </div>
+                    <div>
+                        <label class="form-label">截止时间</label>
+                        <p class="form-control-static">2024-01-22 18:00</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label class="form-label">考试说明</label>
+                    <p class="form-control-static">本次考试为安全生产基础知识综合考试，包含单选题、多选题和判断题。考试过程中请确保网络稳定，系统将进行人脸识别防作弊。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考试记录 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">考试记录</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>考试次数</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>用时</th>
+                                <th>成绩</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>第1次</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td><span class="badge badge-secondary">未开始</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="startExam()">开始考试</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>第2次</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td><span class="badge badge-secondary">未开始</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" disabled>未开始</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>第3次</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td><span class="badge badge-secondary">未开始</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" disabled>未开始</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考试准备 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">考试准备</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="text-align: center; padding: 20px; border: 2px dashed #ddd; border-radius: 8px;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📚</div>
+                        <h4>复习资料</h4>
+                        <p>查看相关学习资料</p>
+                        <button class="btn btn-primary" onclick="viewMaterials()">查看资料</button>
+                    </div>
+                    <div style="text-align: center; padding: 20px; border: 2px dashed #ddd; border-radius: 8px;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
+                        <h4>模拟考试</h4>
+                        <p>进行模拟考试练习</p>
+                        <button class="btn btn-warning" onclick="startMockExam()">开始模拟</button>
+                    </div>
+                    <div style="text-align: center; padding: 20px; border: 2px dashed #ddd; border-radius: 8px;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🔍</div>
+                        <h4>考试规则</h4>
+                        <p>了解考试规则和注意事项</p>
+                        <button class="btn btn-info" onclick="viewRules()">查看规则</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 人脸识别提示 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <div style="font-size: 24px;">🔒</div>
+                    <div>
+                        <strong>人脸识别防作弊</strong>
+                        <br>
+                        <small>考试过程中系统将进行人脸识别，请确保摄像头正常工作，保持面部清晰可见。</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn btn-primary btn-lg" onclick="startExam()">开始考试</button>
+                    <button class="btn btn-warning" onclick="startMockExam()">模拟考试</button>
+                    <button class="btn btn-secondary" onclick="viewMaterials()">复习资料</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+        
+        // 开始考试
+        function startExam() {
+            if (confirm('确定要开始正式考试吗？考试开始后将计时，请确保网络稳定。')) {
+                // 检查摄像头
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(() => {
+                            alert('摄像头检查通过，正在启动人脸识别系统...');
+                            setTimeout(() => {
+                                alert('人脸识别系统启动成功，正在进入考试...');
+                                // 跳转到考试页面
+                                window.location.href = 'exam-taking.html';
+                            }, 2000);
+                        })
+                        .catch(() => {
+                            alert('摄像头检查失败，请确保摄像头正常工作后再开始考试。');
+                        });
+                } else {
+                    alert('浏览器不支持摄像头功能，请使用现代浏览器。');
+                }
+            }
+        }
+        
+        // 开始模拟考试
+        function startMockExam() {
+            if (confirm('确定要开始模拟考试吗？模拟考试不计入正式成绩。')) {
+                alert('正在进入模拟考试...');
+                setTimeout(() => {
+                    alert('模拟考试加载完成，正在进入考试...');
+                    // 跳转到模拟考试页面
+                    window.location.href = 'mock-exam.html';
+                }, 1000);
+            }
+        }
+        
+        // 查看复习资料
+        function viewMaterials() {
+            alert('正在打开复习资料页面...');
+            setTimeout(() => {
+                // 跳转到学习资源页面
+                window.location.href = 'learning-resources.html';
+            }, 1000);
+        }
+        
+        // 查看考试规则
+        function viewRules() {
+            const rules = `
+考试规则：
+1. 考试时间为60分钟，超时自动提交
+2. 考试过程中请保持网络稳定
+3. 系统将进行人脸识别防作弊
+4. 考试期间不得离开考试页面
+5. 每人有3次考试机会
+6. 及格分数为60分
+7. 考试结束后可查看成绩和答案解析
+            `;
+            alert(rules);
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = 'dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = '../admin/dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>
