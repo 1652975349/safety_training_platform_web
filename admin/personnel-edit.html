@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑人员 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link active">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- 主内容区域 -->
+<div class="main-content">
+    <div class="content-header">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button class="btn btn-secondary" onclick="goBack()">← 返回</button>
+            <h1 class="page-title" id="pageTitle">编辑人员信息</h1>
+        </div>
+        <p class="page-subtitle" id="pageSubtitle">修改人员基本信息、部门、专业等</p>
+    </div>
+    
+    <!-- 编辑表单 -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">基本信息</h2>
+        </div>
+        <div class="card-body">
+            <form id="editPersonnelForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">工号 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="empId" name="empId" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">姓名 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">身份证号 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="idCard" name="idCard" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">手机号 <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">部门 <span class="text-danger">*</span></label>
+                            <select class="form-control" id="department" name="department" required>
+                                <option value="">请选择部门</option>
+                                <option value="production">生产部</option>
+                                <option value="technology">技术部</option>
+                                <option value="safety">安全部</option>
+                                <option value="maintenance">维修部</option>
+                                <option value="quality">质量部</option>
+                                <option value="logistics">物流部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">专业 <span class="text-danger">*</span></label>
+                            <select class="form-control" id="profession" name="profession" required>
+                                <option value="">请选择专业</option>
+                                <option value="electrical">电气专业</option>
+                                <option value="mechanical">机械专业</option>
+                                <option value="safety">安全专业</option>
+                                <option value="chemical">化工专业</option>
+                                <option value="civil">土建专业</option>
+                                <option value="instrument">仪表专业</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">人员类型 <span class="text-danger">*</span></label>
+                            <select class="form-control" id="personnelType" name="personnelType" required>
+                                <option value="">请选择人员类型</option>
+                                <option value="longterm">长维人员</option>
+                                <option value="outsource">外委人员</option>
+                                <option value="temporary">临时人员</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">状态</label>
+                            <select class="form-control" id="status" name="status">
+                                <option value="active">正常</option>
+                                <option value="inactive">未激活</option>
+                                <option value="suspended">暂停</option>
+                                <option value="terminated">离职</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">入职时间</label>
+                            <input type="date" class="form-control" id="joinDate" name="joinDate">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">岗位</label>
+                            <input type="text" class="form-control" id="position" name="position" placeholder="如：电气工程师">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">紧急联系人</label>
+                            <input type="text" class="form-control" id="emergencyContact" name="emergencyContact">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">紧急联系电话</label>
+                            <input type="tel" class="form-control" id="emergencyPhone" name="emergencyPhone">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">备注</label>
+                    <textarea class="form-control" id="remarks" name="remarks" rows="3" placeholder="其他备注信息"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;" id="actionButtons">
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">取消</button>
+                    <button type="button" class="btn btn-warning" onclick="resetForm()">重置</button>
+                    <button type="submit" class="btn btn-primary">保存修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 页面加载时从sessionStorage获取人员信息
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPersonnelData();
+        checkEditMode();
+    });
+
+    // 加载人员数据
+    function loadPersonnelData() {
+        const empId = sessionStorage.getItem('editPersonnelId') || sessionStorage.getItem('viewPersonnelId');
+        const name = sessionStorage.getItem('editPersonnelName') || sessionStorage.getItem('viewPersonnelName');
+        const idCard = sessionStorage.getItem('editPersonnelIdCard');
+        const phone = sessionStorage.getItem('editPersonnelPhone');
+        const department = sessionStorage.getItem('editPersonnelDepartment');
+        const profession = sessionStorage.getItem('editPersonnelProfession');
+        const type = sessionStorage.getItem('editPersonnelType');
+        const regTime = sessionStorage.getItem('editPersonnelRegTime');
+        const status = sessionStorage.getItem('editPersonnelStatus');
+
+        if (empId) {
+            document.getElementById('empId').value = empId;
+            document.getElementById('name').value = name || '';
+            document.getElementById('idCard').value = idCard || '';
+            document.getElementById('phone').value = phone || '';
+            document.getElementById('department').value = getDepartmentValue(department);
+            document.getElementById('profession').value = getProfessionValue(profession);
+            document.getElementById('personnelType').value = getTypeValue(type);
+            document.getElementById('status').value = getStatusValue(status);
+            document.getElementById('joinDate').value = regTime || '';
+        }
+    }
+    
+    // 检查编辑模式
+    function checkEditMode() {
+        const editMode = sessionStorage.getItem('editMode');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageSubtitle = document.getElementById('pageSubtitle');
+        const actionButtons = document.getElementById('actionButtons');
+        const form = document.getElementById('editPersonnelForm');
+        
+        if (editMode === 'view') {
+            // 查看模式
+            pageTitle.textContent = '查看人员信息';
+            pageSubtitle.textContent = '查看人员基本信息、部门、专业等';
+            
+            // 禁用所有表单元素
+            const formElements = form.querySelectorAll('input, select, textarea');
+            formElements.forEach(element => {
+                element.disabled = true;
+            });
+            
+            // 隐藏操作按钮
+            actionButtons.style.display = 'none';
+        } else {
+            // 编辑模式
+            pageTitle.textContent = '编辑人员信息';
+            pageSubtitle.textContent = '修改人员基本信息、部门、专业等';
+        }
+    }
+
+    // 部门名称转值
+    function getDepartmentValue(departmentName) {
+        const departmentMap = {
+            '生产部': 'production',
+            '技术部': 'technology',
+            '安全部': 'safety',
+            '维修部': 'maintenance',
+            '质量部': 'quality',
+            '物流部': 'logistics'
+        };
+        return departmentMap[departmentName] || '';
+    }
+
+    // 专业名称转值
+    function getProfessionValue(professionName) {
+        const professionMap = {
+            '电气专业': 'electrical',
+            '机械专业': 'mechanical',
+            '安全专业': 'safety',
+            '化工专业': 'chemical',
+            '土建专业': 'civil',
+            '仪表专业': 'instrument'
+        };
+        return professionMap[professionName] || '';
+    }
+
+    // 人员类型转值
+    function getTypeValue(typeName) {
+        const typeMap = {
+            '长维人员': 'longterm',
+            '外委人员': 'outsource',
+            '临时人员': 'temporary'
+        };
+        return typeMap[typeName] || '';
+    }
+
+    // 状态转值
+    function getStatusValue(statusName) {
+        const statusMap = {
+            '正常': 'active',
+            '未激活': 'inactive',
+            '暂停': 'suspended',
+            '离职': 'terminated'
+        };
+        return statusMap[statusName] || 'active';
+    }
+
+    // 表单提交
+    document.getElementById('editPersonnelForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const personnelData = {};
+        
+        for (let [key, value] of formData.entries()) {
+            personnelData[key] = value;
+        }
+        
+        // 验证必填字段
+        if (!personnelData.name || !personnelData.idCard || !personnelData.phone || 
+            !personnelData.department || !personnelData.profession || !personnelData.personnelType) {
+            alert('请填写所有必填字段！');
+            return;
+        }
+        
+        // 验证身份证号格式
+        if (!validateIdCard(personnelData.idCard)) {
+            alert('身份证号格式不正确！');
+            return;
+        }
+        
+        // 验证手机号格式
+        if (!validatePhone(personnelData.phone)) {
+            alert('手机号格式不正确！');
+            return;
+        }
+        
+        // 模拟保存
+        alert('正在保存人员信息...');
+        
+        setTimeout(() => {
+            alert('人员信息保存成功！');
+            // 清除sessionStorage
+            clearEditSessionStorage();
+            // 返回人员列表
+            window.location.href = 'personnel.html';
+        }, 1000);
+    });
+
+    // 重置表单
+    function resetForm() {
+        if (confirm('确定要重置表单吗？所有修改将丢失！')) {
+            loadPersonnelData();
+        }
+    }
+
+    // 返回上一页
+    function goBack() {
+        if (confirm('确定要离开吗？未保存的修改将丢失！')) {
+            clearEditSessionStorage();
+            window.location.href = 'personnel.html';
+        }
+    }
+
+    // 清除编辑相关的sessionStorage
+    function clearEditSessionStorage() {
+        const keys = [
+            'editPersonnelId', 'editPersonnelName', 'editPersonnelIdCard', 
+            'editPersonnelPhone', 'editPersonnelDepartment', 'editPersonnelProfession',
+            'editPersonnelType', 'editPersonnelRegTime', 'editPersonnelStatus', 'editMode',
+            'viewPersonnelId', 'viewPersonnelName'
+        ];
+        keys.forEach(key => sessionStorage.removeItem(key));
+    }
+
+    // 验证身份证号
+    function validateIdCard(idCard) {
+        const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        return reg.test(idCard);
+    }
+
+    // 验证手机号
+    function validatePhone(phone) {
+        const reg = /^1[3-9]\d{9}$/;
+        return reg.test(phone);
+    }
+
+    // 角色切换功能
+    function switchRole(role) {
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        if (role === 'student') {
+            window.location.href = '../student/dashboard_simple.html';
+        } else if (role === 'admin') {
+            window.location.href = 'dashboard_simple.html';
+        }
+    }
+
+    // 退出功能
+    function logout() {
+        if (confirm('确定要退出系统吗？')) {
+            window.location.href = '../index.html';
+        }
+    }
+
+    // 更新用户信息
+    function updateUserInfo(username) {
+        document.getElementById('currentUser').textContent = username;
+    }
+</script>
+</body>
+</html>

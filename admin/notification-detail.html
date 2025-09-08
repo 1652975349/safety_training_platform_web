@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知详情 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link active">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">通知详情</h1>
+            <p class="page-subtitle">查看通知详细信息</p>
+        </div>
+        
+        <!-- 通知基本信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">基本信息</h2>
+                <div class="card-actions">
+                    <button class="btn btn-primary btn-sm" onclick="editNotification()">编辑</button>
+                    <button class="btn btn-secondary btn-sm" onclick="goBack()">返回</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>通知标题</label>
+                        <span id="detailTitle">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>通知类型</label>
+                        <span id="detailType">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>接收对象</label>
+                        <span id="detailRecipients">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>发送时间</label>
+                        <span id="detailSendTime">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>通知状态</label>
+                        <span id="detailStatus">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>阅读率</label>
+                        <span id="detailReadRate">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 通知内容 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">通知内容</h2>
+            </div>
+            <div class="card-body">
+                <div id="detailContent" class="notification-content">
+                    <!-- 通知内容将在这里显示 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 发送统计 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">发送统计</h2>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">📊</div>
+                        <div class="stat-number" id="totalRecipients">0</div>
+                        <div class="stat-label">总接收人数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">👁️</div>
+                        <div class="stat-number" id="readCount">0</div>
+                        <div class="stat-label">已阅读人数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">⏱️</div>
+                        <div class="stat-number" id="avgReadTime">0</div>
+                        <div class="stat-label">平均阅读时间(分钟)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">📱</div>
+                        <div class="stat-number" id="responseCount">0</div>
+                        <div class="stat-label">响应人数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 阅读记录 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">阅读记录</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>部门</th>
+                                <th>阅读时间</th>
+                                <th>阅读时长</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody id="readRecordsTable">
+                            <!-- 阅读记录将在这里显示 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从URL参数获取通知信息
+        function getNotificationInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                title: urlParams.get('title') || '消防安全考试通知',
+                type: urlParams.get('type') || 'exam',
+                recipients: urlParams.get('recipients') || '生产部全体学员',
+                sendTime: urlParams.get('sendTime') || '2024-01-16 09:00',
+                status: urlParams.get('status') || '已发送',
+                readRate: urlParams.get('readRate') || '85'
+            };
+        }
+        
+        // 加载通知详情
+        function loadNotificationDetail() {
+            const info = getNotificationInfo();
+            
+            // 更新基本信息
+            document.getElementById('detailTitle').textContent = info.title;
+            document.getElementById('detailType').innerHTML = getTypeBadge(info.type);
+            document.getElementById('detailRecipients').textContent = info.recipients;
+            document.getElementById('detailSendTime').textContent = info.sendTime;
+            document.getElementById('detailStatus').innerHTML = getStatusBadge(info.status);
+            document.getElementById('detailReadRate').innerHTML = getReadRateDisplay(info.readRate);
+            
+            // 更新通知内容
+            document.getElementById('detailContent').innerHTML = getNotificationContent(info.title, info.type);
+            
+            // 更新统计数据
+            updateStatistics(info.readRate);
+            
+            // 加载阅读记录
+            loadReadRecords();
+        }
+        
+        function getTypeBadge(type) {
+            const typeMap = {
+                'training': '<span class="badge badge-info">培训通知</span>',
+                'exam': '<span class="badge badge-danger">考试通知</span>',
+                'system': '<span class="badge badge-info">系统通知</span>',
+                'reminder': '<span class="badge badge-warning">催办通知</span>'
+            };
+            return typeMap[type] || '<span class="badge badge-secondary">未知类型</span>';
+        }
+        
+        function getStatusBadge(status) {
+            const statusMap = {
+                '已发送': '<span class="badge badge-success">已发送</span>',
+                '草稿': '<span class="badge badge-secondary">草稿</span>',
+                '定时发送': '<span class="badge badge-warning">定时发送</span>'
+            };
+            return statusMap[status] || '<span class="badge badge-secondary">未知状态</span>';
+        }
+        
+        function getReadRateDisplay(readRate) {
+            const rate = parseInt(readRate);
+            return `
+                <div class="progress" style="width: 150px; display: inline-block;">
+                    <div class="progress-bar" style="width: ${rate}%"></div>
+                </div>
+                <span style="margin-left: 10px;">${rate}%</span>
+            `;
+        }
+        
+        function getNotificationContent(title, type) {
+            const contentMap = {
+                '消防安全考试通知': `
+                    <h4>消防安全考试通知</h4>
+                    <p>各位同事：</p>
+                    <p>根据公司安全培训计划，现定于2024年1月20日（周六）上午9:00-11:00进行消防安全知识考试。</p>
+                    <p><strong>考试安排：</strong></p>
+                    <ul>
+                        <li>考试时间：2024年1月20日 9:00-11:00</li>
+                        <li>考试地点：公司培训中心</li>
+                        <li>考试形式：闭卷考试</li>
+                        <li>考试内容：消防安全基础知识、消防器材使用、应急逃生等</li>
+                    </ul>
+                    <p><strong>注意事项：</strong></p>
+                    <ul>
+                        <li>请携带身份证件参加考试</li>
+                        <li>考试期间请关闭手机等通讯设备</li>
+                        <li>考试合格分数为80分</li>
+                        <li>未通过考试者需参加补考</li>
+                    </ul>
+                    <p>请各位同事认真准备，按时参加考试。</p>
+                    <p>特此通知。</p>
+                    <p style="text-align: right; margin-top: 30px;">安全培训部<br>2024年1月16日</p>
+                `,
+                '新培训课程发布': `
+                    <h4>新培训课程发布通知</h4>
+                    <p>各位同事：</p>
+                    <p>公司新增化工安全培训课程，现正式发布，请相关人员进行学习。</p>
+                    <p><strong>课程信息：</strong></p>
+                    <ul>
+                        <li>课程名称：化工安全基础知识</li>
+                        <li>课程时长：2小时</li>
+                        <li>学习方式：在线学习</li>
+                        <li>完成期限：2024年1月31日前</li>
+                    </ul>
+                    <p>请技术部全体学员及时登录系统进行学习。</p>
+                    <p>特此通知。</p>
+                    <p style="text-align: right; margin-top: 30px;">安全培训部<br>2024年1月15日</p>
+                `,
+                '培训催办通知': `
+                    <h4>培训催办通知</h4>
+                    <p>各位同事：</p>
+                    <p>根据培训记录，部分学员尚未完成规定的安全培训课程，现进行催办。</p>
+                    <p><strong>未完成培训人员：</strong></p>
+                    <ul>
+                        <li>张三 - 消防安全培训</li>
+                        <li>李四 - 化学品安全培训</li>
+                        <li>王五 - 设备安全培训</li>
+                    </ul>
+                    <p>请以上人员于2024年1月25日前完成相关培训，逾期将影响工作安排。</p>
+                    <p>特此催办。</p>
+                    <p style="text-align: right; margin-top: 30px;">安全培训部<br>2024年1月15日</p>
+                `,
+                '系统维护通知': `
+                    <h4>系统维护通知</h4>
+                    <p>各位用户：</p>
+                    <p>为了提升系统性能和稳定性，我们将于今晚进行系统维护升级。</p>
+                    <p><strong>维护时间：</strong>2024年1月17日 02:00-06:00</p>
+                    <p><strong>影响范围：</strong>系统将暂时无法访问</p>
+                    <p><strong>维护内容：</strong></p>
+                    <ul>
+                        <li>数据库优化</li>
+                        <li>系统性能提升</li>
+                        <li>安全补丁更新</li>
+                    </ul>
+                    <p>维护期间给您带来的不便，敬请谅解。</p>
+                    <p>特此通知。</p>
+                    <p style="text-align: right; margin-top: 30px;">技术部<br>2024年1月16日</p>
+                `,
+                '月度培训总结': `
+                    <h4>月度培训总结</h4>
+                    <p>各位管理员：</p>
+                    <p>现将1月份培训完成情况进行总结汇报。</p>
+                    <p><strong>培训完成情况：</strong></p>
+                    <ul>
+                        <li>计划培训人数：150人</li>
+                        <li>实际完成人数：142人</li>
+                        <li>完成率：94.7%</li>
+                        <li>平均成绩：87.5分</li>
+                    </ul>
+                    <p><strong>主要问题：</strong></p>
+                    <ul>
+                        <li>部分人员学习积极性不高</li>
+                        <li>培训内容需要进一步优化</li>
+                        <li>考试通过率有待提高</li>
+                    </ul>
+                    <p><strong>改进措施：</strong></p>
+                    <ul>
+                        <li>加强培训宣传和动员</li>
+                        <li>优化培训内容和形式</li>
+                        <li>建立培训激励机制</li>
+                    </ul>
+                    <p>特此汇报。</p>
+                    <p style="text-align: right; margin-top: 30px;">安全培训部<br>2024年1月31日</p>
+                `
+            };
+            
+            return contentMap[title] || '<p>通知内容加载中...</p>';
+        }
+        
+        function updateStatistics(readRate) {
+            const rate = parseInt(readRate);
+            const totalRecipients = Math.floor(100 + Math.random() * 50); // 模拟数据
+            const readCount = Math.floor(totalRecipients * rate / 100);
+            const avgReadTime = Math.floor(5 + Math.random() * 10);
+            const responseCount = Math.floor(readCount * 0.3);
+            
+            document.getElementById('totalRecipients').textContent = totalRecipients;
+            document.getElementById('readCount').textContent = readCount;
+            document.getElementById('avgReadTime').textContent = avgReadTime;
+            document.getElementById('responseCount').textContent = responseCount;
+        }
+        
+        function loadReadRecords() {
+            const records = [
+                { name: '张三', department: '生产部', readTime: '2024-01-16 09:15', duration: '3分钟', status: '已阅读' },
+                { name: '李四', department: '生产部', readTime: '2024-01-16 09:20', duration: '5分钟', status: '已阅读' },
+                { name: '王五', department: '生产部', readTime: '2024-01-16 09:25', duration: '2分钟', status: '已阅读' },
+                { name: '赵六', department: '生产部', readTime: '2024-01-16 09:30', duration: '4分钟', status: '已阅读' },
+                { name: '钱七', department: '生产部', readTime: '2024-01-16 09:35', duration: '3分钟', status: '已阅读' },
+                { name: '孙八', department: '生产部', readTime: '-', duration: '-', status: '未阅读' },
+                { name: '周九', department: '生产部', readTime: '-', duration: '-', status: '未阅读' }
+            ];
+            
+            const tbody = document.getElementById('readRecordsTable');
+            tbody.innerHTML = records.map(record => `
+                <tr>
+                    <td>${record.name}</td>
+                    <td>${record.department}</td>
+                    <td>${record.readTime}</td>
+                    <td>${record.duration}</td>
+                    <td>
+                        <span class="badge ${record.status === '已阅读' ? 'badge-success' : 'badge-warning'}">
+                            ${record.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // 编辑通知
+        function editNotification() {
+            const info = getNotificationInfo();
+            const params = new URLSearchParams({
+                title: info.title,
+                type: info.type,
+                recipients: info.recipients,
+                sendTime: info.sendTime,
+                status: info.status
+            });
+            window.location.href = `notification-edit.html?${params.toString()}`;
+        }
+        
+        // 返回
+        function goBack() {
+            window.location.href = 'notifications.html';
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotificationDetail();
+        });
+    </script>
+    
+    <style>
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .detail-item label {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .detail-item span {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .notification-content {
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        
+        .notification-content h4 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        
+        .notification-content p {
+            margin-bottom: 10px;
+        }
+        
+        .notification-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .notification-content li {
+            margin-bottom: 5px;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</body>
+</html>

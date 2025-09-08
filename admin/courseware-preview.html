@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预览课件 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+    <style>
+        .preview-container {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .document-viewer {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .preview-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+            color: white;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #007bff;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .time-display {
+            color: white;
+            font-size: 14px;
+            min-width: 100px;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        .volume-progress {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            width: 70%;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link active">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="btn btn-secondary" onclick="goBack()">← 返回</button>
+                <div>
+                    <h1 class="page-title">预览课件</h1>
+                    <p class="page-subtitle" id="previewTitle">安全生产基础知识视频</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 课件预览区域 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">课件预览</h2>
+                <div>
+                    <span class="badge badge-info" id="previewType">视频</span>
+                    <span class="badge badge-success" id="previewSize">125MB</span>
+                </div>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <!-- 视频预览 -->
+                <div id="videoPreview" class="preview-container" style="display: block;">
+                    <div class="video-player">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🎥</div>
+                            <div>安全生产基础知识视频</div>
+                            <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">点击播放按钮开始预览</div>
+                        </div>
+                    </div>
+                    <div class="preview-controls">
+                        <div class="progress-bar-container" onclick="seekVideo(event)">
+                            <div class="progress-bar" id="videoProgress"></div>
+                        </div>
+                        <div class="control-buttons">
+                            <button class="btn btn-sm" style="background: transparent; border: none; color: white; font-size: 20px;" onclick="togglePlay()">
+                                <span id="playIcon">▶️</span>
+                            </button>
+                            <div class="time-display">
+                                <span id="currentTime">00:00</span> / <span id="totalTime">45:00</span>
+                            </div>
+                            <div class="volume-control">
+                                <span>🔊</span>
+                                <div class="volume-slider" onclick="adjustVolume(event)">
+                                    <div class="volume-progress" id="volumeProgress"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm" style="background: transparent; border: none; color: white; font-size: 16px;" onclick="toggleFullscreen()">
+                                ⛶
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文档预览 -->
+                <div id="documentPreview" class="preview-container" style="display: none;">
+                    <div class="document-viewer">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">📄</div>
+                            <div>文档预览</div>
+                            <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">PDF/Word文档预览功能</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PPT预览 -->
+                <div id="pptPreview" class="preview-container" style="display: none;">
+                    <div class="document-viewer">
+                        <div style="text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+                            <div>PPT预览</div>
+                            <div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">PowerPoint演示文稿预览</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 课件信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">课件信息</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <label class="form-label">课件名称</label>
+                        <p class="form-control-static" id="infoName">安全生产基础知识视频</p>
+                    </div>
+                    <div>
+                        <label class="form-label">课件类型</label>
+                        <p class="form-control-static" id="infoType">视频</p>
+                    </div>
+                    <div>
+                        <label class="form-label">文件大小</label>
+                        <p class="form-control-static" id="infoSize">125MB</p>
+                    </div>
+                    <div>
+                        <label class="form-label">学时</label>
+                        <p class="form-control-static" id="infoHours">0.75小时</p>
+                    </div>
+                    <div>
+                        <label class="form-label">积分奖励</label>
+                        <p class="form-control-static" id="infoPoints">50积分</p>
+                    </div>
+                    <div>
+                        <label class="form-label">难度等级</label>
+                        <p class="form-control-static" id="infoDifficulty">简单</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label class="form-label">课件描述</label>
+                    <p class="form-control-static" id="infoDescription">涵盖安全生产法律法规、安全管理制度等基础内容，适用于所有长维人员。</p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label class="form-label">标签</label>
+                    <div id="infoTags">
+                        <span class="badge badge-info">安全生产</span>
+                        <span class="badge badge-info">法律法规</span>
+                        <span class="badge badge-info">基础培训</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn btn-primary" onclick="editCourseware()">✏️ 编辑课件</button>
+                    <button class="btn btn-secondary" onclick="downloadCourseware()">📥 下载课件</button>
+                    <button class="btn btn-warning" onclick="shareCourseware()">🔗 分享链接</button>
+                    <button class="btn btn-info" onclick="viewUsage()">📊 使用统计</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPlaying = false;
+        let currentTime = 0;
+        let totalTime = 2700; // 45分钟 = 2700秒
+        
+        // 页面加载时从URL参数获取课件信息
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            const type = urlParams.get('type');
+            
+            if (name) {
+                document.getElementById('previewTitle').textContent = name;
+                document.getElementById('infoName').textContent = name;
+            }
+            
+            if (type) {
+                const typeMap = {
+                    'video': '视频',
+                    'ppt': 'PPT',
+                    'pdf': 'PDF',
+                    'word': 'Word',
+                    'excel': 'Excel'
+                };
+                
+                const typeText = typeMap[type.toLowerCase()] || type;
+                document.getElementById('previewType').textContent = typeText;
+                document.getElementById('infoType').textContent = typeText;
+                
+                // 根据类型显示相应的预览区域
+                showPreviewByType(type.toLowerCase());
+            }
+        });
+        
+        // 根据类型显示预览区域
+        function showPreviewByType(type) {
+            // 隐藏所有预览区域
+            document.getElementById('videoPreview').style.display = 'none';
+            document.getElementById('documentPreview').style.display = 'none';
+            document.getElementById('pptPreview').style.display = 'none';
+            
+            // 显示对应的预览区域
+            if (type === 'video') {
+                document.getElementById('videoPreview').style.display = 'block';
+            } else if (type === 'ppt') {
+                document.getElementById('pptPreview').style.display = 'block';
+            } else {
+                document.getElementById('documentPreview').style.display = 'block';
+            }
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+        
+        // 播放/暂停
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const playIcon = document.getElementById('playIcon');
+            playIcon.textContent = isPlaying ? '⏸️' : '▶️';
+            
+            if (isPlaying) {
+                startPlayback();
+            } else {
+                stopPlayback();
+            }
+        }
+        
+        // 开始播放
+        function startPlayback() {
+            // 模拟播放进度
+            const interval = setInterval(() => {
+                if (!isPlaying) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                currentTime += 1;
+                updateProgress();
+                
+                if (currentTime >= totalTime) {
+                    currentTime = totalTime;
+                    isPlaying = false;
+                    document.getElementById('playIcon').textContent = '▶️';
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+        
+        // 停止播放
+        function stopPlayback() {
+            // 停止播放逻辑
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            const progress = (currentTime / totalTime) * 100;
+            document.getElementById('videoProgress').style.width = progress + '%';
+            
+            // 更新时间显示
+            document.getElementById('currentTime').textContent = formatTime(currentTime);
+        }
+        
+        // 格式化时间
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        // 跳转视频
+        function seekVideo(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const width = rect.width;
+            const percentage = x / width;
+            
+            currentTime = Math.floor(totalTime * percentage);
+            updateProgress();
+        }
+        
+        // 调整音量
+        function adjustVolume(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const width = rect.width;
+            const percentage = x / width;
+            
+            document.getElementById('volumeProgress').style.width = (percentage * 100) + '%';
+        }
+        
+        // 全屏
+        function toggleFullscreen() {
+            const previewContainer = document.querySelector('.preview-container');
+            if (!document.fullscreenElement) {
+                previewContainer.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // 编辑课件
+        function editCourseware() {
+            const name = document.getElementById('infoName').textContent;
+            const type = document.getElementById('infoType').textContent;
+            
+            const params = new URLSearchParams({
+                name: name,
+                type: type,
+                size: '125MB',
+                uploadTime: '2024-01-10'
+            });
+            window.location.href = `courseware-edit.html?${params.toString()}`;
+        }
+        
+        // 下载课件
+        function downloadCourseware() {
+            const name = document.getElementById('infoName').textContent;
+            if (confirm(`确定要下载课件"${name}"吗？`)) {
+                alert('正在下载课件...');
+                setTimeout(() => {
+                    alert('课件下载完成！');
+                }, 1000);
+            }
+        }
+        
+        // 分享课件
+        function shareCourseware() {
+            const name = document.getElementById('infoName').textContent;
+            const shareUrl = `${window.location.origin}/student/learning-resources.html?resource=${encodeURIComponent(name)}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: name,
+                    text: '查看这个学习资源',
+                    url: shareUrl
+                });
+            } else {
+                // 复制到剪贴板
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('分享链接已复制到剪贴板！');
+                });
+            }
+        }
+        
+        // 查看使用统计
+        function viewUsage() {
+            const name = document.getElementById('infoName').textContent;
+            alert(`正在查看课件"${name}"的使用统计...`);
+            // 这里可以跳转到统计页面
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+        
+        // 初始化时间显示
+        document.getElementById('totalTime').textContent = formatTime(totalTime);
+    </script>
+</body>
+</html>

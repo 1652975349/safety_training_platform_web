@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑通知 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link active">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">编辑通知</h1>
+            <p class="page-subtitle">修改通知信息</p>
+        </div>
+        
+        <!-- 通知编辑表单 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">通知信息</h2>
+            </div>
+            <div class="card-body">
+                <form id="notificationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="notificationTitle">通知标题 *</label>
+                            <input type="text" id="notificationTitle" class="form-control" placeholder="请输入通知标题" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="notificationType">通知类型 *</label>
+                            <select id="notificationType" class="form-control" required>
+                                <option value="">请选择通知类型</option>
+                                <option value="training">培训通知</option>
+                                <option value="exam">考试通知</option>
+                                <option value="system">系统通知</option>
+                                <option value="reminder">催办通知</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipients">接收对象 *</label>
+                            <select id="recipients" class="form-control" required>
+                                <option value="">请选择接收对象</option>
+                                <option value="all">全体用户</option>
+                                <option value="students">全体学员</option>
+                                <option value="admins">全体管理员</option>
+                                <option value="production">生产部全体学员</option>
+                                <option value="technical">技术部全体学员</option>
+                                <option value="maintenance">维修部全体学员</option>
+                                <option value="safety">安全部全体学员</option>
+                                <option value="custom">自定义选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority">优先级</label>
+                            <select id="priority" class="form-control">
+                                <option value="normal">普通</option>
+                                <option value="high">高</option>
+                                <option value="urgent">紧急</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notificationContent">通知内容 *</label>
+                        <textarea id="notificationContent" class="form-control" rows="8" placeholder="请输入通知内容" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sendTime">发送时间</label>
+                            <input type="datetime-local" id="sendTime" class="form-control">
+                            <small class="form-text text-muted">留空表示立即发送</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="expireTime">过期时间</label>
+                            <input type="datetime-local" id="expireTime" class="form-control">
+                            <small class="form-text text-muted">通知过期时间（可选）</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="sendEmail"> 同时发送邮件通知
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="sendSms"> 同时发送短信通知
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="saveDraft()">保存草稿</button>
+                        <button type="button" class="btn btn-primary" onclick="updateNotification()">更新通知</button>
+                        <button type="button" class="btn btn-warning" onclick="resendNotification()">重新发送</button>
+                        <button type="button" class="btn btn-outline" onclick="goBack()">返回</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 预览区域 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">通知预览</h2>
+            </div>
+            <div class="card-body">
+                <div id="notificationPreview" class="notification-preview">
+                    <div class="preview-header">
+                        <h3 id="previewTitle">通知标题</h3>
+                        <div class="preview-meta">
+                            <span id="previewType" class="badge badge-info">通知类型</span>
+                            <span id="previewPriority" class="badge badge-secondary">优先级</span>
+                        </div>
+                    </div>
+                    <div class="preview-content">
+                        <p id="previewContent">通知内容将在这里显示...</p>
+                    </div>
+                    <div class="preview-footer">
+                        <small class="text-muted">
+                            接收对象：<span id="previewRecipients">-</span> | 
+                            发送时间：<span id="previewSendTime">-</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从URL参数获取通知信息
+        function getNotificationInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                title: urlParams.get('title') || '',
+                type: urlParams.get('type') || '',
+                recipients: urlParams.get('recipients') || '',
+                sendTime: urlParams.get('sendTime') || '',
+                status: urlParams.get('status') || ''
+            };
+        }
+        
+        // 加载通知信息到表单
+        function loadNotificationInfo() {
+            const info = getNotificationInfo();
+            
+            document.getElementById('notificationTitle').value = info.title;
+            document.getElementById('notificationType').value = info.type;
+            document.getElementById('recipients').value = getRecipientsValue(info.recipients);
+            document.getElementById('sendTime').value = formatDateTime(info.sendTime);
+            
+            // 根据通知标题加载对应的内容
+            document.getElementById('notificationContent').value = getNotificationContent(info.title);
+            
+            // 更新预览
+            updatePreview();
+        }
+        
+        function getRecipientsValue(recipients) {
+            const recipientsMap = {
+                '全体用户': 'all',
+                '全体学员': 'students',
+                '全体管理员': 'admins',
+                '生产部全体学员': 'production',
+                '技术部全体学员': 'technical',
+                '维修部全体学员': 'maintenance',
+                '安全部全体学员': 'safety'
+            };
+            return recipientsMap[recipients] || '';
+        }
+        
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return '';
+            // 将 "2024-01-16 09:00" 格式转换为 "2024-01-16T09:00"
+            return dateTimeStr.replace(' ', 'T');
+        }
+        
+        function getNotificationContent(title) {
+            const contentMap = {
+                '消防安全考试通知': `各位同事：
+
+根据公司安全培训计划，现定于2024年1月20日（周六）上午9:00-11:00进行消防安全知识考试。
+
+考试安排：
+• 考试时间：2024年1月20日 9:00-11:00
+• 考试地点：公司培训中心
+• 考试形式：闭卷考试
+• 考试内容：消防安全基础知识、消防器材使用、应急逃生等
+
+注意事项：
+• 请携带身份证件参加考试
+• 考试期间请关闭手机等通讯设备
+• 考试合格分数为80分
+• 未通过考试者需参加补考
+
+请各位同事认真准备，按时参加考试。
+
+特此通知。
+
+安全培训部
+2024年1月16日`,
+                '新培训课程发布': `各位同事：
+
+公司新增化工安全培训课程，现正式发布，请相关人员进行学习。
+
+课程信息：
+• 课程名称：化工安全基础知识
+• 课程时长：2小时
+• 学习方式：在线学习
+• 完成期限：2024年1月31日前
+
+请技术部全体学员及时登录系统进行学习。
+
+特此通知。
+
+安全培训部
+2024年1月15日`,
+                '培训催办通知': `各位同事：
+
+根据培训记录，部分学员尚未完成规定的安全培训课程，现进行催办。
+
+未完成培训人员：
+• 张三 - 消防安全培训
+• 李四 - 化学品安全培训
+• 王五 - 设备安全培训
+
+请以上人员于2024年1月25日前完成相关培训，逾期将影响工作安排。
+
+特此催办。
+
+安全培训部
+2024年1月15日`,
+                '系统维护通知': `各位用户：
+
+为了提升系统性能和稳定性，我们将于今晚进行系统维护升级。
+
+维护时间：2024年1月17日 02:00-06:00
+影响范围：系统将暂时无法访问
+
+维护内容：
+• 数据库优化
+• 系统性能提升
+• 安全补丁更新
+
+维护期间给您带来的不便，敬请谅解。
+
+特此通知。
+
+技术部
+2024年1月16日`,
+                '月度培训总结': `各位管理员：
+
+现将1月份培训完成情况进行总结汇报。
+
+培训完成情况：
+• 计划培训人数：150人
+• 实际完成人数：142人
+• 完成率：94.7%
+• 平均成绩：87.5分
+
+主要问题：
+• 部分人员学习积极性不高
+• 培训内容需要进一步优化
+• 考试通过率有待提高
+
+改进措施：
+• 加强培训宣传和动员
+• 优化培训内容和形式
+• 建立培训激励机制
+
+特此汇报。
+
+安全培训部
+2024年1月31日`
+            };
+            
+            return contentMap[title] || '';
+        }
+        
+        // 实时预览功能
+        function updatePreview() {
+            const title = document.getElementById('notificationTitle').value || '通知标题';
+            const type = document.getElementById('notificationType').value;
+            const content = document.getElementById('notificationContent').value || '通知内容将在这里显示...';
+            const recipients = document.getElementById('recipients').value;
+            const priority = document.getElementById('priority').value;
+            const sendTime = document.getElementById('sendTime').value;
+            
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewContent').textContent = content;
+            document.getElementById('previewRecipients').textContent = getRecipientsText(recipients);
+            document.getElementById('previewSendTime').textContent = sendTime ? new Date(sendTime).toLocaleString() : '立即发送';
+            
+            // 更新类型标签
+            const typeText = getTypeText(type);
+            const typeElement = document.getElementById('previewType');
+            typeElement.textContent = typeText;
+            typeElement.className = `badge ${getTypeBadgeClass(type)}`;
+            
+            // 更新优先级标签
+            const priorityText = getPriorityText(priority);
+            const priorityElement = document.getElementById('previewPriority');
+            priorityElement.textContent = priorityText;
+            priorityElement.className = `badge ${getPriorityBadgeClass(priority)}`;
+        }
+        
+        function getTypeText(type) {
+            const typeMap = {
+                'training': '培训通知',
+                'exam': '考试通知',
+                'system': '系统通知',
+                'reminder': '催办通知'
+            };
+            return typeMap[type] || '通知类型';
+        }
+        
+        function getTypeBadgeClass(type) {
+            const classMap = {
+                'training': 'badge-info',
+                'exam': 'badge-danger',
+                'system': 'badge-info',
+                'reminder': 'badge-warning'
+            };
+            return classMap[type] || 'badge-secondary';
+        }
+        
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'normal': '普通',
+                'high': '高',
+                'urgent': '紧急'
+            };
+            return priorityMap[priority] || '普通';
+        }
+        
+        function getPriorityBadgeClass(priority) {
+            const classMap = {
+                'normal': 'badge-secondary',
+                'high': 'badge-warning',
+                'urgent': 'badge-danger'
+            };
+            return classMap[priority] || 'badge-secondary';
+        }
+        
+        function getRecipientsText(recipients) {
+            const recipientsMap = {
+                'all': '全体用户',
+                'students': '全体学员',
+                'admins': '全体管理员',
+                'production': '生产部全体学员',
+                'technical': '技术部全体学员',
+                'maintenance': '维修部全体学员',
+                'safety': '安全部全体学员',
+                'custom': '自定义选择'
+            };
+            return recipientsMap[recipients] || '-';
+        }
+        
+        // 保存草稿
+        function saveDraft() {
+            const form = document.getElementById('notificationForm');
+            if (!form.checkValidity()) {
+                alert('请填写必填字段');
+                return;
+            }
+            
+            alert('正在保存草稿...');
+            setTimeout(() => {
+                alert('草稿保存成功！');
+                window.location.href = 'notifications.html';
+            }, 1000);
+        }
+        
+        // 更新通知
+        function updateNotification() {
+            const form = document.getElementById('notificationForm');
+            if (!form.checkValidity()) {
+                alert('请填写必填字段');
+                return;
+            }
+            
+            if (confirm('确定要更新此通知吗？')) {
+                alert('正在更新通知...');
+                setTimeout(() => {
+                    alert('通知更新成功！');
+                    window.location.href = 'notifications.html';
+                }, 1000);
+            }
+        }
+        
+        // 重新发送
+        function resendNotification() {
+            const form = document.getElementById('notificationForm');
+            if (!form.checkValidity()) {
+                alert('请填写必填字段');
+                return;
+            }
+            
+            if (confirm('确定要重新发送此通知吗？')) {
+                alert('正在重新发送通知...');
+                setTimeout(() => {
+                    alert('通知重新发送成功！');
+                    window.location.href = 'notifications.html';
+                }, 1000);
+            }
+        }
+        
+        // 返回
+        function goBack() {
+            if (confirm('确定要离开吗？未保存的修改将丢失。')) {
+                window.location.href = 'notifications.html';
+            }
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+        
+        // 绑定输入事件
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载通知信息
+            loadNotificationInfo();
+            
+            const inputs = ['notificationTitle', 'notificationType', 'notificationContent', 'recipients', 'priority', 'sendTime'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', updatePreview);
+                document.getElementById(id).addEventListener('change', updatePreview);
+            });
+        });
+    </script>
+    
+    <style>
+        .notification-preview {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .preview-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .preview-header h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .preview-meta {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .preview-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        
+        .preview-footer {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</body>
+</html>

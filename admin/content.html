@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容管理 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link active">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">内容管理</h1>
+            <p class="page-subtitle">上传课件、题库管理</p>
+        </div>
+        
+        <!-- 内容统计 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📚</div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">课件总数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">🎥</div>
+                <div class="stat-number">45</div>
+                <div class="stat-label">视频文件</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📄</div>
+                <div class="stat-number">89</div>
+                <div class="stat-label">文档文件</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">📝</div>
+                <div class="stat-number">2,580</div>
+                <div class="stat-label">题库题目</div>
+            </div>
+        </div>
+        
+        <!-- 操作工具栏 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: space-between;">
+                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="uploadCourseware()">📤 上传课件</button>
+                        <!-- <button class="btn btn-success" onclick="manageQuestionBank()">📝 题库管理</button> -->
+                        <!-- <button class="btn btn-warning" onclick="createCourse()">➕ 创建课程</button>
+                        <button class="btn btn-info" onclick="batchUpload()">📁 批量上传</button> -->
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                            <select class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="video">视频</option>
+                                <option value="ppt">PPT</option>
+                                <option value="pdf">PDF</option>
+                                <option value="word">Word</option>
+                                <option value="excel">Excel</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                            <input type="text" class="form-control" placeholder="搜索内容名称">
+                        </div>
+                        <button class="btn btn-secondary">🔍 搜索</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- 课件管理 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">课件管理</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" onchange="toggleSelectAll()">
+                                </th>
+                                <th>课件名称</th>
+                                <th>类型</th>
+                                <th>大小</th>
+                                <th>上传时间</th>
+                                <th>使用次数</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="content-checkbox"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 30px; height: 30px; background: #e3f2fd; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px;">🎥</div>
+                                        <div>
+                                            <strong>安全生产基础知识视频</strong>
+                                            <br>
+                                            <small class="text-muted">涵盖安全生产法律法规、安全管理制度等</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">视频</span></td>
+                                <td>125MB</td>
+                                <td>2024-01-10</td>
+                                <td>156次</td>
+                                <td><span class="badge badge-success">正常</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editCourseware('安全生产基础知识视频', '视频', '125MB', '2024-01-10')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewCourseware('安全生产基础知识视频', '视频')">预览</button>
+                                    <button class="btn btn-warning btn-sm" onclick="downloadCourseware('安全生产基础知识视频')">下载</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCourseware('安全生产基础知识视频')">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="content-checkbox"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 30px; height: 30px; background: #e8f5e8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px;">📄</div>
+                                        <div>
+                                            <strong>电气安全操作规程</strong>
+                                            <br>
+                                            <small class="text-muted">电气设备操作安全规范、事故预防措施</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-success">PDF</span></td>
+                                <td>8.5MB</td>
+                                <td>2024-01-08</td>
+                                <td>89次</td>
+                                <td><span class="badge badge-success">正常</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editCourseware('电气安全操作规程', 'PDF', '8.5MB', '2024-01-08')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewCourseware('电气安全操作规程', 'PDF')">预览</button>
+                                    <button class="btn btn-warning btn-sm" onclick="downloadCourseware('电气安全操作规程')">下载</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCourseware('电气安全操作规程')">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="content-checkbox"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 30px; height: 30px; background: #fff3e0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px;">📊</div>
+                                        <div>
+                                            <strong>消防安全培训PPT</strong>
+                                            <br>
+                                            <small class="text-muted">消防器材使用、火灾逃生、应急处理</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">PPT</span></td>
+                                <td>15.2MB</td>
+                                <td>2024-01-12</td>
+                                <td>234次</td>
+                                <td><span class="badge badge-success">正常</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editCourseware('消防安全培训PPT', 'PPT', '15.2MB', '2024-01-12')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewCourseware('消防安全培训PPT', 'PPT')">预览</button>
+                                    <button class="btn btn-warning btn-sm" onclick="downloadCourseware('消防安全培训PPT')">下载</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCourseware('消防安全培训PPT')">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="content-checkbox"></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 30px; height: 30px; background: #fce4ec; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px;">📝</div>
+                                        <div>
+                                            <strong>化工安全知识文档</strong>
+                                            <br>
+                                            <small class="text-muted">化工生产安全知识、危险化学品管理</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-danger">Word</span></td>
+                                <td>3.8MB</td>
+                                <td>2024-01-14</td>
+                                <td>67次</td>
+                                <td><span class="badge badge-success">正常</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editCourseware('化工安全知识文档', 'Word', '3.8MB', '2024-01-14')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewCourseware('化工安全知识文档', 'Word')">预览</button>
+                                    <button class="btn btn-warning btn-sm" onclick="downloadCourseware('化工安全知识文档')">下载</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCourseware('化工安全知识文档')">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 题库管理 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">题库管理</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="addQuestion()">➕ 添加题目</button>
+                    <button class="btn btn-success" onclick="importQuestions()">📥 导入题目</button>
+                    <button class="btn btn-warning" onclick="exportQuestions()">📤 导出题目</button>
+                    <button class="btn btn-info" onclick="createExamPaper()">📝 组卷</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" onchange="toggleSelectAllQuestions()">
+                                </th>
+                                <th>题目内容</th>
+                                <th>题型</th>
+                                <th>难度</th>
+                                <th>分类</th>
+                                <th>创建时间</th>
+                                <th>使用次数</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="question-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>安全生产的基本方针是什么？</strong>
+                                        <br>
+                                        <small class="text-muted">A. 安全第一，预防为主 B. 预防为主，综合治理 C. 安全第一，综合治理 D. 预防为主，安全第一</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">单选题</span></td>
+                                <td><span class="badge badge-success">简单</span></td>
+                                <td>安全生产</td>
+                                <td>2024-01-10</td>
+                                <td>156次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editQuestion(1, '安全生产的基本方针是什么？', '单选题', '简单', '安全生产')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewQuestion(1, '安全生产的基本方针是什么？', '单选题')">预览</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteQuestion(1, '安全生产的基本方针是什么？')">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="question-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>电气设备操作前需要检查哪些项目？（多选）</strong>
+                                        <br>
+                                        <small class="text-muted">A. 设备外观 B. 绝缘性能 C. 接地情况 D. 操作环境</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">多选题</span></td>
+                                <td><span class="badge badge-warning">中等</span></td>
+                                <td>电气安全</td>
+                                <td>2024-01-08</td>
+                                <td>89次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editQuestion(2, '电气设备操作前需要检查哪些项目？', '多选题', '中等', '电气安全')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewQuestion(2, '电气设备操作前需要检查哪些项目？', '多选题')">预览</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteQuestion(2, '电气设备操作前需要检查哪些项目？')">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="question-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>消防器材可以随意移动位置。</strong>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-danger">判断题</span></td>
+                                <td><span class="badge badge-success">简单</span></td>
+                                <td>消防安全</td>
+                                <td>2024-01-12</td>
+                                <td>234次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editQuestion(3, '消防器材可以随意移动位置。', '判断题', '简单', '消防安全')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewQuestion(3, '消防器材可以随意移动位置。', '判断题')">预览</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteQuestion(3, '消防器材可以随意移动位置。')">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="question-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>请简述化工生产中的主要安全风险及预防措施。</strong>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">简答题</span></td>
+                                <td><span class="badge badge-danger">困难</span></td>
+                                <td>化工安全</td>
+                                <td>2024-01-14</td>
+                                <td>67次</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editQuestion(4, '请简述化工生产中的主要安全风险及预防措施。', '简答题', '困难', '化工安全')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="previewQuestion(4, '请简述化工生产中的主要安全风险及预防措施。', '简答题')">预览</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteQuestion(4, '请简述化工生产中的主要安全风险及预防措施。')">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 文件上传区域 -->
+        <!-- <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">文件上传</h2>
+            </div>
+            <div class="card-body">
+                <div style="border: 2px dashed #ddd; border-radius: 10px; padding: 40px; text-align: center; background: #f8f9fa;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">📁</div>
+                    <h4 style="margin-bottom: 15px;">拖拽文件到此处或点击上传</h4>
+                    <p style="color: #666; margin-bottom: 20px;">支持视频、PPT、PDF、Word、Excel等格式，单个文件不超过100MB</p>
+                    <button class="btn btn-primary" onclick="selectFiles()">选择文件</button>
+                    <input type="file" id="fileInput" multiple style="display: none;" accept=".mp4,.avi,.mov,.ppt,.pptx,.pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <h5>支持的文件格式：</h5>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+                        <span class="badge badge-info">MP4/AVI/MOV</span>
+                        <span class="badge badge-warning">PPT/PPTX</span>
+                        <span class="badge badge-success">PDF</span>
+                        <span class="badge badge-danger">DOC/DOCX</span>
+                        <span class="badge badge-info">XLS/XLSX</span>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // 全选/取消全选
+        function toggleSelectAll() {
+            const selectAll = document.querySelector('input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('.content-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+        
+        function toggleSelectAllQuestions() {
+            const selectAll = document.querySelectorAll('input[type="checkbox"]')[1];
+            const checkboxes = document.querySelectorAll('.question-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+        
+        // 上传课件
+        function uploadCourseware() {
+            // 跳转到课件上传页面
+            window.location.href = 'courseware-upload.html';
+        }
+        
+        // 编辑课件
+        function editCourseware(name, type, size, uploadTime) {
+            // 跳转到课件编辑页面
+            const params = new URLSearchParams({
+                name: name,
+                type: type,
+                size: size,
+                uploadTime: uploadTime
+            });
+            window.location.href = `courseware-edit.html?${params.toString()}`;
+        }
+        
+        // 预览课件
+        function previewCourseware(name, type) {
+            // 跳转到课件预览页面
+            const params = new URLSearchParams({
+                name: name,
+                type: type
+            });
+            window.location.href = `courseware-preview.html?${params.toString()}`;
+        }
+        
+        // 下载课件
+        function downloadCourseware(name) {
+            if (confirm(`确定要下载课件"${name}"吗？`)) {
+                alert(`正在下载课件"${name}"...`);
+                // 这里可以触发文件下载
+                setTimeout(() => {
+                    alert('课件下载完成！');
+                }, 1000);
+            }
+        }
+        
+        // 删除课件
+        function deleteCourseware(name) {
+            if (confirm(`确定要删除课件"${name}"吗？\n\n删除后将无法恢复！`)) {
+                alert(`正在删除课件"${name}"...`);
+                setTimeout(() => {
+                    alert('课件删除成功！');
+                    // 这里可以刷新页面或移除对应行
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // 添加题目
+        function addQuestion() {
+            // 跳转到添加题目页面
+            window.location.href = 'question-add.html';
+        }
+        
+        // 编辑题目
+        function editQuestion(questionId, content, type, difficulty, category) {
+            // 跳转到题目编辑页面
+            const params = new URLSearchParams({
+                id: questionId,
+                content: content,
+                type: type,
+                difficulty: difficulty,
+                category: category
+            });
+            window.location.href = `question-edit.html?${params.toString()}`;
+        }
+        
+        // 预览题目
+        function previewQuestion(questionId, content, type) {
+            // 跳转到题目预览页面
+            const params = new URLSearchParams({
+                id: questionId,
+                content: content,
+                type: type
+            });
+            window.location.href = `question-preview.html?${params.toString()}`;
+        }
+        
+        // 删除题目
+        function deleteQuestion(questionId, content) {
+            if (confirm(`确定要删除题目"${content.substring(0, 30)}..."吗？\n\n删除后将无法恢复！`)) {
+                alert(`正在删除题目...`);
+                setTimeout(() => {
+                    alert('题目删除成功！');
+                    // 这里可以刷新页面或移除对应行
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // 导入题目
+        function importQuestions() {
+            // 跳转到题目导入页面
+            window.location.href = 'question-import.html';
+        }
+        
+        // 导出题目
+        function exportQuestions() {
+            const selectedQuestions = getSelectedQuestions();
+            if (selectedQuestions.length === 0) {
+                alert('请先选择要导出的题目');
+                return;
+            }
+            
+            if (confirm(`确定要导出选中的 ${selectedQuestions.length} 道题目吗？`)) {
+                alert('正在导出题目...');
+                setTimeout(() => {
+                    alert('题目导出成功！');
+                }, 1000);
+            }
+        }
+        
+        // 组卷
+        function createExamPaper() {
+            // 跳转到组卷页面
+            window.location.href = 'exam-paper-create.html';
+        }
+        
+        // 获取选中的题目
+        function getSelectedQuestions() {
+            const checkboxes = document.querySelectorAll('.question-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.closest('tr'));
+        }
+        
+        // 批量删除课件
+        function batchDeleteCourseware() {
+            const selected = getSelectedCourseware();
+            if (selected.length === 0) {
+                alert('请先选择要删除的课件');
+                return;
+            }
+            
+            if (confirm(`确定要删除选中的 ${selected.length} 个课件吗？\n\n删除后将无法恢复！`)) {
+                alert(`正在删除 ${selected.length} 个课件...`);
+                setTimeout(() => {
+                    alert('课件删除成功！');
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // 获取选中的课件
+        function getSelectedCourseware() {
+            const checkboxes = document.querySelectorAll('.content-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.closest('tr'));
+        }
+        
+        // 批量删除题目
+        function batchDeleteQuestions() {
+            const selected = getSelectedQuestions();
+            if (selected.length === 0) {
+                alert('请先选择要删除的题目');
+                return;
+            }
+            
+            if (confirm(`确定要删除选中的 ${selected.length} 道题目吗？\n\n删除后将无法恢复！`)) {
+                alert(`正在删除 ${selected.length} 道题目...`);
+                setTimeout(() => {
+                    alert('题目删除成功！');
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // 选择文件
+        function selectFiles() {
+            document.getElementById('fileInput').click();
+        }
+        
+        // 文件选择处理
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                alert(`已选择 ${files.length} 个文件，准备上传...`);
+            }
+        });
+        
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>培训管理 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link active">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">培训管理</h1>
+            <p class="page-subtitle">创建自主培训和外委人员培训，设定学时、组卷、下发、催办</p>
+        </div>
+        
+        <!-- 操作工具栏 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: space-between;">
+                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="createTraining()">➕ 创建培训</button>
+                        <!-- <button class="btn btn-success" onclick="createExam()">📝 创建考试</button> -->
+                        <button class="btn btn-warning" onclick="batchAssign()">📤 批量下发</button>
+                        <button class="btn btn-info" onclick="sendReminder()">📢 发送催办</button>
+                    </div>
+                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                            <select class="form-control">
+                                <option value="">全部类型</option>
+                                <option value="longterm">长维人员培训</option>
+                                <option value="outsource">外委人员培训</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; min-width: 150px;">
+                            <select class="form-control">
+                                <option value="">全部状态</option>
+                                <option value="draft">草稿</option>
+                                <option value="published">已发布</option>
+                                <option value="archived">已归档</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                            <input type="text" class="form-control" placeholder="搜索培训名称">
+                        </div>
+                        <button class="btn btn-secondary">🔍 搜索</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 培训统计 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📚</div>
+                <div class="stat-number">48</div>
+                <div class="stat-label">总培训数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">👥</div>
+                <div class="stat-number">1,256</div>
+                <div class="stat-label">参与人数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">⏱️</div>
+                <div class="stat-number">2,580</div>
+                <div class="stat-label">累计学时</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">📊</div>
+                <div class="stat-number">89%</div>
+                <div class="stat-label">完成率</div>
+            </div>
+        </div>
+        
+        <!-- 培训列表 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">培训列表</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" onchange="toggleSelectAll()">
+                                </th>
+                                <th>培训名称</th>
+                                <th>类型</th>
+                                <th>参与人数</th>
+                                <th>完成率</th>
+                                <th>学时要求</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="training-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>安全生产基础知识培训</strong>
+                                        <br>
+                                        <small class="text-muted">涵盖安全生产法律法规、安全管理制度等基础内容</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">长维人员培训</span></td>
+                                <td>156人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 85%"></div>
+                                    </div>
+                                    <small>85%</small>
+                                </td>
+                                <td>8小时</td>
+                                <td><span class="badge badge-success">进行中</span></td>
+                                <td>2024-01-10</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editTraining('training_001', '安全生产基础知识培训')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewTrainingDetail('training_001', '安全生产基础知识培训')">详情</button>
+                                    <button class="btn btn-warning btn-sm" onclick="sendReminder('training_001', '安全生产基础知识培训')">催办</button>
+                                    <button class="btn btn-danger btn-sm" onclick="archiveTraining('training_001', '安全生产基础知识培训')">归档</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="training-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>电气安全操作规程</strong>
+                                        <br>
+                                        <small class="text-muted">电气设备操作安全规范、事故预防措施</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">外委人员培训</span></td>
+                                <td>89人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 92%"></div>
+                                    </div>
+                                    <small>92%</small>
+                                </td>
+                                <td>6小时</td>
+                                <td><span class="badge badge-success">进行中</span></td>
+                                <td>2024-01-08</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editTraining('training_002', '电气安全操作规程')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewTrainingDetail('training_002', '电气安全操作规程')">详情</button>
+                                    <button class="btn btn-warning btn-sm" onclick="sendReminder('training_002', '电气安全操作规程')">催办</button>
+                                    <button class="btn btn-danger btn-sm" onclick="archiveTraining('training_002', '电气安全操作规程')">归档</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="training-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>消防安全培训</strong>
+                                        <br>
+                                        <small class="text-muted">消防器材使用、火灾逃生、应急处理</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">长维人员培训</span></td>
+                                <td>234人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 78%"></div>
+                                    </div>
+                                    <small>78%</small>
+                                </td>
+                                <td>4小时</td>
+                                <td><span class="badge badge-success">进行中</span></td>
+                                <td>2024-01-12</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editTraining('training_003', '消防安全培训')">编辑</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewTrainingDetail('training_003', '消防安全培训')">详情</button>
+                                    <button class="btn btn-warning btn-sm" onclick="sendReminder('training_003', '消防安全培训')">催办</button>
+                                    <button class="btn btn-danger btn-sm" onclick="archiveTraining('training_003', '消防安全培训')">归档</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="training-checkbox"></td>
+                                <td>
+                                    <div>
+                                        <strong>化工安全培训</strong>
+                                        <br>
+                                        <small class="text-muted">化工生产安全知识、危险化学品管理</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">外委人员培训</span></td>
+                                <td>67人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                    <small>100%</small>
+                                </td>
+                                <td>5小时</td>
+                                <td><span class="badge badge-info">已完成</span></td>
+                                <td>2024-01-05</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewTrainingDetail('training_004', '化工安全培训')">详情</button>
+                                    <button class="btn btn-success btn-sm" onclick="generateRecordCard('training_004', '化工安全培训')">生成记录卡</button>
+                                    <button class="btn btn-danger btn-sm" onclick="archiveTraining('training_004', '化工安全培训')">归档</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 三级安全培训记录卡 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">三级安全培训记录卡</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="generateRecordCards()">📋 生成记录卡</button>
+                    <button class="btn btn-success" onclick="exportRecordCards()">📤 导出记录卡</button>
+                    <button class="btn btn-info" onclick="printRecordCards()">🖨️ 打印记录卡</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>记录卡编号</th>
+                                <th>学员姓名</th>
+                                <th>部门</th>
+                                <th>培训类型</th>
+                                <th>培训时间</th>
+                                <th>学时</th>
+                                <th>成绩</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TRC202401001</td>
+                                <td>张三</td>
+                                <td>生产部</td>
+                                <td>长维人员培训</td>
+                                <td>2024-01-10 - 2024-01-15</td>
+                                <td>8小时</td>
+                                <td>85分</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">查看</button>
+                                    <button class="btn btn-primary btn-sm">打印</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>TRC202401002</td>
+                                <td>李四</td>
+                                <td>技术部</td>
+                                <td>长维人员培训</td>
+                                <td>2024-01-08 - 2024-01-12</td>
+                                <td>6小时</td>
+                                <td>92分</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">查看</button>
+                                    <button class="btn btn-primary btn-sm">打印</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>TRC202401003</td>
+                                <td>王五</td>
+                                <td>维修部</td>
+                                <td>外委人员培训</td>
+                                <td>2024-01-12 - 2024-01-18</td>
+                                <td>4小时</td>
+                                <td>88分</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">查看</button>
+                                    <button class="btn btn-primary btn-sm">打印</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全选/取消全选
+        function toggleSelectAll() {
+            const selectAll = document.querySelector('input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('.training-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+        
+        // 创建培训
+        function createTraining() {
+            window.location.href = 'training-create.html';
+        }
+        
+        // 创建考试
+        function createExam() {
+            alert('跳转到创建考试页面');
+        }
+        
+        // 批量下发
+        function batchAssign() {
+            const selected = document.querySelectorAll('.training-checkbox:checked');
+            if (selected.length === 0) {
+                alert('请先选择要下发的培训');
+                return;
+            }
+            if (confirm(`确定要下发选中的 ${selected.length} 个培训吗？`)) {
+                alert('正在批量下发培训...');
+            }
+        }
+        
+        // 发送催办
+        function sendReminder() {
+            const selected = document.querySelectorAll('.training-checkbox:checked');
+            if (selected.length === 0) {
+                alert('请先选择要催办的培训');
+                return;
+            }
+            if (confirm(`确定要发送催办通知给选中的 ${selected.length} 个培训的学员吗？`)) {
+                alert('正在发送催办通知...');
+            }
+        }
+        
+        // 查看培训详情
+        function viewTrainingDetail(trainingId, trainingName) {
+            // 将培训信息存储到sessionStorage中，供详情页面使用
+            sessionStorage.setItem('currentTrainingId', trainingId);
+            sessionStorage.setItem('currentTrainingName', trainingName);
+            window.location.href = 'training-detail.html';
+        }
+        
+        // 编辑培训
+        function editTraining(trainingId, trainingName) {
+            // 将培训信息存储到sessionStorage中，供编辑页面使用
+            sessionStorage.setItem('currentTrainingId', trainingId);
+            sessionStorage.setItem('currentTrainingName', trainingName);
+            sessionStorage.setItem('editMode', 'true');
+            window.location.href = 'training-create.html';
+        }
+        
+        // 归档培训
+        function archiveTraining(trainingId, trainingName) {
+            if (confirm(`确定要归档培训"${trainingName}"吗？`)) {
+                // 这里可以调用API归档培训
+                alert(`培训"${trainingName}"已归档`);
+                // 刷新页面或更新表格
+                location.reload();
+            }
+        }
+        
+        // 生成记录卡
+        function generateRecordCard(trainingId, trainingName) {
+            if (confirm(`确定要为培训"${trainingName}"生成记录卡吗？`)) {
+                alert(`正在为培训"${trainingName}"生成记录卡...`);
+                // 这里可以调用API生成记录卡
+            }
+        }
+        
+        // 生成记录卡
+        function generateRecordCards() {
+            if (confirm('确定要生成三级安全培训记录卡吗？')) {
+                alert('正在生成记录卡...');
+            }
+        }
+        
+        // 导出记录卡
+        function exportRecordCards() {
+            if (confirm('确定要导出所有记录卡吗？')) {
+                alert('正在导出记录卡...');
+            }
+        }
+        
+        // 打印记录卡
+        function printRecordCards() {
+            if (confirm('确定要打印所有记录卡吗？')) {
+                alert('正在准备打印...');
+            }
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>

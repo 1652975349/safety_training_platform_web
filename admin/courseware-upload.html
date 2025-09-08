@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传课件 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link active">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">上传课件</h1>
+            <p class="page-subtitle">上传新的培训课件</p>
+        </div>
+        
+        <!-- 课件上传表单 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">课件信息</h2>
+            </div>
+            <div class="card-body">
+                <form id="uploadForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="coursewareName">课件名称 *</label>
+                            <input type="text" id="coursewareName" class="form-control" placeholder="请输入课件名称" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="coursewareType">课件类型 *</label>
+                            <select id="coursewareType" class="form-control" required>
+                                <option value="">请选择课件类型</option>
+                                <option value="video">视频</option>
+                                <option value="ppt">PPT</option>
+                                <option value="pdf">PDF</option>
+                                <option value="word">Word</option>
+                                <option value="excel">Excel</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="coursewareCategory">课件分类 *</label>
+                            <select id="coursewareCategory" class="form-control" required>
+                                <option value="">请选择课件分类</option>
+                                <option value="safety">安全生产</option>
+                                <option value="electrical">电气安全</option>
+                                <option value="fire">消防安全</option>
+                                <option value="chemical">化工安全</option>
+                                <option value="equipment">设备安全</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="coursewareLevel">难度等级</label>
+                            <select id="coursewareLevel" class="form-control">
+                                <option value="beginner">初级</option>
+                                <option value="intermediate">中级</option>
+                                <option value="advanced">高级</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coursewareDescription">课件描述</label>
+                        <textarea id="coursewareDescription" class="form-control" rows="4" placeholder="请输入课件描述"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coursewareTags">标签</label>
+                        <input type="text" id="coursewareTags" class="form-control" placeholder="请输入标签，用逗号分隔">
+                        <small class="form-text text-muted">例如：安全培训,基础知识,视频教程</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coursewareFile">选择文件 *</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="file-upload-content">
+                                <div class="file-upload-icon">📁</div>
+                                <h4>拖拽文件到此处或点击选择</h4>
+                                <p>支持视频、PPT、PDF、Word、Excel等格式，单个文件不超过100MB</p>
+                                <button type="button" class="btn btn-primary" onclick="selectFile()">选择文件</button>
+                                <input type="file" id="coursewareFile" style="display: none;" accept=".mp4,.avi,.mov,.ppt,.pptx,.pdf,.doc,.docx,.xls,.xlsx" required>
+                            </div>
+                        </div>
+                        <div id="fileInfo" class="file-info" style="display: none;">
+                            <div class="file-info-content">
+                                <span class="file-name"></span>
+                                <span class="file-size"></span>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeFile()">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="goBack()">取消</button>
+                        <button type="submit" class="btn btn-primary">上传课件</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 支持的文件格式 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">支持的文件格式</h2>
+            </div>
+            <div class="card-body">
+                <div class="file-format-grid">
+                    <div class="format-item">
+                        <div class="format-icon">🎥</div>
+                        <div class="format-name">视频文件</div>
+                        <div class="format-extensions">MP4, AVI, MOV</div>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-icon">📊</div>
+                        <div class="format-name">演示文稿</div>
+                        <div class="format-extensions">PPT, PPTX</div>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-icon">📄</div>
+                        <div class="format-name">PDF文档</div>
+                        <div class="format-extensions">PDF</div>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-icon">📝</div>
+                        <div class="format-name">Word文档</div>
+                        <div class="format-extensions">DOC, DOCX</div>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-icon">📊</div>
+                        <div class="format-name">Excel表格</div>
+                        <div class="format-extensions">XLS, XLSX</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 选择文件
+        function selectFile() {
+            document.getElementById('coursewareFile').click();
+        }
+        
+        // 文件选择处理
+        document.getElementById('coursewareFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                showFileInfo(file);
+            }
+        });
+        
+        // 显示文件信息
+        function showFileInfo(file) {
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = fileInfo.querySelector('.file-name');
+            const fileSize = fileInfo.querySelector('.file-size');
+            
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            
+            document.getElementById('fileUploadArea').style.display = 'none';
+            fileInfo.style.display = 'block';
+        }
+        
+        // 删除文件
+        function removeFile() {
+            document.getElementById('coursewareFile').value = '';
+            document.getElementById('fileUploadArea').style.display = 'block';
+            document.getElementById('fileInfo').style.display = 'none';
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // 拖拽上传
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('drag-over');
+        });
+        
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('drag-over');
+        });
+        
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                document.getElementById('coursewareFile').files = files;
+                showFileInfo(file);
+            }
+        });
+        
+        // 表单提交
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('coursewareFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('请选择要上传的文件');
+                return;
+            }
+            
+            // 检查文件大小
+            if (file.size > 100 * 1024 * 1024) { // 100MB
+                alert('文件大小不能超过100MB');
+                return;
+            }
+            
+            // 收集表单数据
+            formData.append('file', file);
+            formData.append('name', document.getElementById('coursewareName').value);
+            formData.append('type', document.getElementById('coursewareType').value);
+            formData.append('category', document.getElementById('coursewareCategory').value);
+            formData.append('level', document.getElementById('coursewareLevel').value);
+            formData.append('description', document.getElementById('coursewareDescription').value);
+            formData.append('tags', document.getElementById('coursewareTags').value);
+            
+            // 模拟上传
+            alert('正在上传课件...');
+            setTimeout(() => {
+                alert('课件上传成功！');
+                window.location.href = 'content.html';
+            }, 2000);
+        });
+        
+        // 返回
+        function goBack() {
+            if (confirm('确定要离开吗？未保存的内容将丢失。')) {
+                window.location.href = 'content.html';
+            }
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+    
+    <style>
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-area.drag-over {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .file-upload-content {
+            pointer-events: none;
+        }
+        
+        .file-upload-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .file-upload-content h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .file-upload-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .file-upload-content button {
+            pointer-events: all;
+        }
+        
+        .file-info {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+        
+        .file-info-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .file-name {
+            font-weight: bold;
+            flex: 1;
+        }
+        
+        .file-size {
+            color: #666;
+        }
+        
+        .file-format-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .format-item {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .format-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .format-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .format-extensions {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</body>
+</html>

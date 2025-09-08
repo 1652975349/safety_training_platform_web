@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加题目 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link active">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">添加题目</h1>
+            <p class="page-subtitle">创建新的考试题目</p>
+        </div>
+        
+        <!-- 题目创建表单 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">题目信息</h2>
+            </div>
+            <div class="card-body">
+                <form id="questionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="questionType">题目类型 *</label>
+                            <select id="questionType" class="form-control" required onchange="toggleQuestionOptions()">
+                                <option value="">请选择题目类型</option>
+                                <option value="single">单选题</option>
+                                <option value="multiple">多选题</option>
+                                <option value="judge">判断题</option>
+                                <option value="essay">简答题</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="questionCategory">题目分类 *</label>
+                            <select id="questionCategory" class="form-control" required>
+                                <option value="">请选择题目分类</option>
+                                <option value="safety">安全生产</option>
+                                <option value="electrical">电气安全</option>
+                                <option value="fire">消防安全</option>
+                                <option value="chemical">化工安全</option>
+                                <option value="equipment">设备安全</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="questionDifficulty">难度等级 *</label>
+                            <select id="questionDifficulty" class="form-control" required>
+                                <option value="">请选择难度等级</option>
+                                <option value="easy">简单</option>
+                                <option value="medium">中等</option>
+                                <option value="hard">困难</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="questionScore">题目分值</label>
+                            <input type="number" id="questionScore" class="form-control" value="2" min="1" max="10">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionContent">题目内容 *</label>
+                        <textarea id="questionContent" class="form-control" rows="4" placeholder="请输入题目内容" required></textarea>
+                    </div>
+                    
+                    <!-- 选项区域 -->
+                    <div id="optionsArea" style="display: none;">
+                        <div class="form-group">
+                            <label>选项设置</label>
+                            <div id="optionsList">
+                                <!-- 选项将在这里动态生成 -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="addOption()">添加选项</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 正确答案区域 -->
+                    <div class="form-group">
+                        <label for="correctAnswer">正确答案 *</label>
+                        <div id="answerArea">
+                            <!-- 答案输入区域将根据题目类型动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionExplanation">答案解析</label>
+                        <textarea id="questionExplanation" class="form-control" rows="3" placeholder="请输入答案解析"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionTags">标签</label>
+                        <input type="text" id="questionTags" class="form-control" placeholder="请输入标签，用逗号分隔">
+                        <small class="form-text text-muted">例如：基础知识,安全法规,操作规范</small>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="goBack()">取消</button>
+                        <button type="button" class="btn btn-warning" onclick="saveDraft()">保存草稿</button>
+                        <button type="submit" class="btn btn-primary">保存题目</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 题目预览 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">题目预览</h2>
+            </div>
+            <div class="card-body">
+                <div id="questionPreview" class="question-preview">
+                    <p class="text-muted">请填写题目信息后查看预览</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let optionCount = 0;
+        
+        // 切换题目选项
+        function toggleQuestionOptions() {
+            const questionType = document.getElementById('questionType').value;
+            const optionsArea = document.getElementById('optionsArea');
+            const answerArea = document.getElementById('answerArea');
+            
+            if (questionType === 'single' || questionType === 'multiple') {
+                optionsArea.style.display = 'block';
+                generateOptions();
+                generateAnswerOptions();
+            } else if (questionType === 'judge') {
+                optionsArea.style.display = 'none';
+                generateJudgeAnswer();
+            } else if (questionType === 'essay') {
+                optionsArea.style.display = 'none';
+                generateEssayAnswer();
+            } else {
+                optionsArea.style.display = 'none';
+                answerArea.innerHTML = '';
+            }
+            
+            updatePreview();
+        }
+        
+        // 生成选项
+        function generateOptions() {
+            const optionsList = document.getElementById('optionsList');
+            optionsList.innerHTML = '';
+            optionCount = 0;
+            
+            // 默认添加4个选项
+            for (let i = 0; i < 4; i++) {
+                addOption();
+            }
+        }
+        
+        // 添加选项
+        function addOption() {
+            optionCount++;
+            const optionsList = document.getElementById('optionsList');
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            optionDiv.innerHTML = `
+                <div class="option-content">
+                    <label class="option-label">选项 ${String.fromCharCode(64 + optionCount)}</label>
+                    <input type="text" class="form-control option-input" placeholder="请输入选项内容">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeOption(this)">删除</button>
+                </div>
+            `;
+            optionsList.appendChild(optionDiv);
+        }
+        
+        // 删除选项
+        function removeOption(button) {
+            if (optionCount > 2) {
+                button.closest('.option-item').remove();
+                optionCount--;
+                updateOptionLabels();
+            } else {
+                alert('至少需要保留2个选项');
+            }
+        }
+        
+        // 更新选项标签
+        function updateOptionLabels() {
+            const options = document.querySelectorAll('.option-label');
+            options.forEach((label, index) => {
+                label.textContent = `选项 ${String.fromCharCode(65 + index)}`;
+            });
+        }
+        
+        // 生成答案选项
+        function generateAnswerOptions() {
+            const answerArea = document.getElementById('answerArea');
+            const questionType = document.getElementById('questionType').value;
+            
+            if (questionType === 'single') {
+                answerArea.innerHTML = `
+                    <select class="form-control" id="correctAnswer">
+                        <option value="">请选择正确答案</option>
+                    </select>
+                `;
+            } else if (questionType === 'multiple') {
+                answerArea.innerHTML = `
+                    <div id="multipleAnswers">
+                        <p>请选择正确答案（可多选）：</p>
+                    </div>
+                `;
+            }
+            
+            updateAnswerOptions();
+        }
+        
+        // 更新答案选项
+        function updateAnswerOptions() {
+            const questionType = document.getElementById('questionType').value;
+            const options = document.querySelectorAll('.option-input');
+            
+            if (questionType === 'single') {
+                const select = document.getElementById('correctAnswer');
+                select.innerHTML = '<option value="">请选择正确答案</option>';
+                options.forEach((option, index) => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = String.fromCharCode(65 + index);
+                    optionElement.textContent = `${String.fromCharCode(65 + index)}. ${option.value || '选项' + (index + 1)}`;
+                    select.appendChild(optionElement);
+                });
+            } else if (questionType === 'multiple') {
+                const multipleAnswers = document.getElementById('multipleAnswers');
+                multipleAnswers.innerHTML = '<p>请选择正确答案（可多选）：</p>';
+                options.forEach((option, index) => {
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.className = 'form-check';
+                    checkboxDiv.innerHTML = `
+                        <input class="form-check-input" type="checkbox" value="${String.fromCharCode(65 + index)}" id="answer${index}">
+                        <label class="form-check-label" for="answer${index}">
+                            ${String.fromCharCode(65 + index)}. ${option.value || '选项' + (index + 1)}
+                        </label>
+                    `;
+                    multipleAnswers.appendChild(checkboxDiv);
+                });
+            }
+        }
+        
+        // 生成判断题答案
+        function generateJudgeAnswer() {
+            const answerArea = document.getElementById('answerArea');
+            answerArea.innerHTML = `
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="judgeAnswer" value="true" id="judgeTrue">
+                    <label class="form-check-label" for="judgeTrue">正确</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="judgeAnswer" value="false" id="judgeFalse">
+                    <label class="form-check-label" for="judgeFalse">错误</label>
+                </div>
+            `;
+        }
+        
+        // 生成简答题答案
+        function generateEssayAnswer() {
+            const answerArea = document.getElementById('answerArea');
+            answerArea.innerHTML = `
+                <textarea class="form-control" id="essayAnswer" rows="4" placeholder="请输入参考答案"></textarea>
+            `;
+        }
+        
+        // 更新预览
+        function updatePreview() {
+            const questionType = document.getElementById('questionType').value;
+            const questionContent = document.getElementById('questionContent').value;
+            const preview = document.getElementById('questionPreview');
+            
+            if (!questionType || !questionContent) {
+                preview.innerHTML = '<p class="text-muted">请填写题目信息后查看预览</p>';
+                return;
+            }
+            
+            let previewHTML = `
+                <div class="preview-question">
+                    <h4>题目预览</h4>
+                    <p><strong>题目类型：</strong>${getQuestionTypeText(questionType)}</p>
+                    <p><strong>题目内容：</strong>${questionContent}</p>
+            `;
+            
+            if (questionType === 'single' || questionType === 'multiple') {
+                const options = document.querySelectorAll('.option-input');
+                if (options.length > 0) {
+                    previewHTML += '<p><strong>选项：</strong></p><ul>';
+                    options.forEach((option, index) => {
+                        if (option.value) {
+                            previewHTML += `<li>${String.fromCharCode(65 + index)}. ${option.value}</li>`;
+                        }
+                    });
+                    previewHTML += '</ul>';
+                }
+            }
+            
+            previewHTML += '</div>';
+            preview.innerHTML = previewHTML;
+        }
+        
+        function getQuestionTypeText(type) {
+            const typeMap = {
+                'single': '单选题',
+                'multiple': '多选题',
+                'judge': '判断题',
+                'essay': '简答题'
+            };
+            return typeMap[type] || type;
+        }
+        
+        // 保存草稿
+        function saveDraft() {
+            if (validateForm()) {
+                alert('正在保存草稿...');
+                setTimeout(() => {
+                    alert('草稿保存成功！');
+                    window.location.href = 'content.html';
+                }, 1000);
+            }
+        }
+        
+        // 表单验证
+        function validateForm() {
+            const questionType = document.getElementById('questionType').value;
+            const questionContent = document.getElementById('questionContent').value;
+            
+            if (!questionType) {
+                alert('请选择题目类型');
+                return false;
+            }
+            
+            if (!questionContent.trim()) {
+                alert('请输入题目内容');
+                return false;
+            }
+            
+            // 验证选项
+            if (questionType === 'single' || questionType === 'multiple') {
+                const options = document.querySelectorAll('.option-input');
+                let hasValidOption = false;
+                options.forEach(option => {
+                    if (option.value.trim()) {
+                        hasValidOption = true;
+                    }
+                });
+                
+                if (!hasValidOption) {
+                    alert('请至少填写一个选项');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // 表单提交
+        document.getElementById('questionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            alert('正在保存题目...');
+            setTimeout(() => {
+                alert('题目保存成功！');
+                window.location.href = 'content.html';
+            }, 1000);
+        });
+        
+        // 返回
+        function goBack() {
+            if (confirm('确定要离开吗？未保存的内容将丢失。')) {
+                window.location.href = 'content.html';
+            }
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+        
+        // 绑定输入事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = ['questionType', 'questionContent'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', updatePreview);
+                document.getElementById(id).addEventListener('change', updatePreview);
+            });
+        });
+    </script>
+    
+    <style>
+        .option-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .option-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .option-label {
+            min-width: 60px;
+            font-weight: bold;
+        }
+        
+        .option-input {
+            flex: 1;
+        }
+        
+        .question-preview {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .preview-question h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .preview-question p {
+            margin-bottom: 10px;
+        }
+        
+        .preview-question ul {
+            margin-left: 20px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</body>
+</html>

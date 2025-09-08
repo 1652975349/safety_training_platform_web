@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑课件 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+<!-- 顶部通栏 - 直接嵌入 -->
+<header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link active">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="btn btn-secondary" onclick="goBack()">← 返回</button>
+                <div>
+                    <h1 class="page-title">编辑课件</h1>
+                    <p class="page-subtitle" id="coursewareName">安全生产基础知识视频</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 课件基本信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">基本信息</h2>
+            </div>
+            <div class="card-body">
+                <form id="coursewareForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">课件名称 *</label>
+                            <input type="text" class="form-control" id="coursewareNameInput" value="安全生产基础知识视频" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">课件类型 *</label>
+                            <select class="form-control" id="coursewareType" required>
+                                <option value="video" selected>视频</option>
+                                <option value="ppt">PPT</option>
+                                <option value="pdf">PDF</option>
+                                <option value="word">Word</option>
+                                <option value="excel">Excel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">分类 *</label>
+                            <select class="form-control" id="coursewareCategory" required>
+                                <option value="safety" selected>安全生产</option>
+                                <option value="electrical">电气安全</option>
+                                <option value="fire">消防安全</option>
+                                <option value="chemical">化工安全</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">学时(小时) *</label>
+                            <input type="number" class="form-control" id="coursewareHours" value="0.75" min="0" step="0.25" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">积分奖励</label>
+                            <input type="number" class="form-control" id="coursewarePoints" value="50" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">难度等级</label>
+                            <select class="form-control" id="coursewareDifficulty">
+                                <option value="easy" selected>简单</option>
+                                <option value="medium">中等</option>
+                                <option value="hard">困难</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="form-label">课件描述</label>
+                        <textarea class="form-control" id="coursewareDescription" rows="4" placeholder="请输入课件描述...">涵盖安全生产法律法规、安全管理制度等基础内容，适用于所有长维人员。</textarea>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="form-label">标签</label>
+                        <input type="text" class="form-control" id="coursewareTags" value="安全生产,法律法规,基础培训" placeholder="多个标签用逗号分隔">
+                        <small class="form-text text-muted">多个标签用逗号分隔，如：安全生产,法律法规,基础培训</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 文件信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">文件信息</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div>
+                        <label class="form-label">当前文件</label>
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="width: 40px; height: 40px; background: #e3f2fd; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎥</div>
+                            <div>
+                                <div><strong>安全生产基础知识视频.mp4</strong></div>
+                                <small class="text-muted">125MB • 2024-01-10 上传</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">文件大小</label>
+                        <p class="form-control-static">125MB</p>
+                    </div>
+                    <div>
+                        <label class="form-label">上传时间</label>
+                        <p class="form-control-static">2024-01-10 14:30</p>
+                    </div>
+                    <div>
+                        <label class="form-label">使用次数</label>
+                        <p class="form-control-static">156次</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-warning" onclick="replaceFile()">🔄 替换文件</button>
+                    <button class="btn btn-secondary" onclick="previewFile()">👁️ 预览文件</button>
+                    <button class="btn btn-info" onclick="downloadFile()">📥 下载文件</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 访问权限 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">访问权限</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">可见性</label>
+                        <select class="form-control" id="coursewareVisibility">
+                            <option value="public" selected>公开 - 所有学员可见</option>
+                            <option value="department">部门 - 仅指定部门可见</option>
+                            <option value="role">角色 - 仅指定角色可见</option>
+                            <option value="private">私有 - 仅管理员可见</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="departmentSelect" style="display: none;">
+                        <label class="form-label">选择部门</label>
+                        <select class="form-control" multiple>
+                            <option value="production">生产部</option>
+                            <option value="maintenance">维修部</option>
+                            <option value="safety">安全部</option>
+                            <option value="management">管理部</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="roleSelect" style="display: none;">
+                        <label class="form-label">选择角色</label>
+                        <select class="form-control" multiple>
+                            <option value="longterm">长维人员</option>
+                            <option value="outsource">外委人员</option>
+                            <option value="supervisor">主管</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label class="form-label">学习要求</label>
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" id="requireCompletion" checked>
+                            <span class="form-check-label">必须完成学习</span>
+                        </label>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" id="requireExam">
+                            <span class="form-check-label">需要考试</span>
+                        </label>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" id="allowDownload" checked>
+                            <span class="form-check-label">允许下载</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn btn-primary" onclick="saveCourseware()">💾 保存修改</button>
+                    <button class="btn btn-secondary" onclick="previewCourseware()">👁️ 预览课件</button>
+                    <button class="btn btn-warning" onclick="resetForm()">🔄 重置</button>
+                    <button class="btn btn-danger" onclick="deleteCourseware()">🗑️ 删除课件</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时从URL参数获取课件信息
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            const type = urlParams.get('type');
+            const size = urlParams.get('size');
+            const uploadTime = urlParams.get('uploadTime');
+            
+            if (name) {
+                document.getElementById('coursewareName').textContent = name;
+                document.getElementById('coursewareNameInput').value = name;
+            }
+            if (type) {
+                document.getElementById('coursewareType').value = type.toLowerCase();
+            }
+        });
+        
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+        
+        // 保存课件修改
+        function saveCourseware() {
+            const form = document.getElementById('coursewareForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const coursewareData = {
+                name: document.getElementById('coursewareNameInput').value,
+                type: document.getElementById('coursewareType').value,
+                category: document.getElementById('coursewareCategory').value,
+                hours: document.getElementById('coursewareHours').value,
+                points: document.getElementById('coursewarePoints').value,
+                difficulty: document.getElementById('coursewareDifficulty').value,
+                description: document.getElementById('coursewareDescription').value,
+                tags: document.getElementById('coursewareTags').value,
+                visibility: document.getElementById('coursewareVisibility').value
+            };
+            
+            if (confirm('确定要保存课件修改吗？')) {
+                alert('正在保存课件修改...');
+                setTimeout(() => {
+                    alert('课件修改保存成功！');
+                    // 这里可以调用API保存数据
+                    // 然后跳转回内容管理页面
+                    window.location.href = 'content.html';
+                }, 1000);
+            }
+        }
+        
+        // 预览课件
+        function previewCourseware() {
+            const coursewareName = document.getElementById('coursewareNameInput').value;
+            const coursewareType = document.getElementById('coursewareType').value;
+            
+            const params = new URLSearchParams({
+                name: coursewareName,
+                type: coursewareType
+            });
+            window.location.href = `courseware-preview.html?${params.toString()}`;
+        }
+        
+        // 重置表单
+        function resetForm() {
+            if (confirm('确定要重置表单吗？所有修改将丢失！')) {
+                document.getElementById('coursewareForm').reset();
+                // 恢复默认值
+                document.getElementById('coursewareNameInput').value = '安全生产基础知识视频';
+                document.getElementById('coursewareType').value = 'video';
+                document.getElementById('coursewareCategory').value = 'safety';
+                document.getElementById('coursewareHours').value = '0.75';
+                document.getElementById('coursewarePoints').value = '50';
+                document.getElementById('coursewareDifficulty').value = 'easy';
+                document.getElementById('coursewareDescription').value = '涵盖安全生产法律法规、安全管理制度等基础内容，适用于所有长维人员。';
+                document.getElementById('coursewareTags').value = '安全生产,法律法规,基础培训';
+            }
+        }
+        
+        // 删除课件
+        function deleteCourseware() {
+            const coursewareName = document.getElementById('coursewareNameInput').value;
+            if (confirm(`确定要删除课件"${coursewareName}"吗？\n\n删除后将无法恢复！`)) {
+                alert('正在删除课件...');
+                setTimeout(() => {
+                    alert('课件删除成功！');
+                    window.location.href = 'content.html';
+                }, 1000);
+            }
+        }
+        
+        // 替换文件
+        function replaceFile() {
+            if (confirm('确定要替换当前文件吗？\n\n替换后原文件将被删除！')) {
+                alert('正在打开文件选择器...');
+                // 这里可以打开文件选择器
+                setTimeout(() => {
+                    alert('文件替换成功！');
+                }, 1000);
+            }
+        }
+        
+        // 预览文件
+        function previewFile() {
+            previewCourseware();
+        }
+        
+        // 下载文件
+        function downloadFile() {
+            const coursewareName = document.getElementById('coursewareNameInput').value;
+            if (confirm(`确定要下载课件"${coursewareName}"吗？`)) {
+                alert('正在下载文件...');
+                setTimeout(() => {
+                    alert('文件下载完成！');
+                }, 1000);
+            }
+        }
+        
+        // 监听可见性变化
+        document.getElementById('coursewareVisibility').addEventListener('change', function() {
+            const visibility = this.value;
+            const departmentSelect = document.getElementById('departmentSelect');
+            const roleSelect = document.getElementById('roleSelect');
+            
+            // 隐藏所有选择器
+            departmentSelect.style.display = 'none';
+            roleSelect.style.display = 'none';
+            
+            // 根据选择显示相应的选择器
+            if (visibility === 'department') {
+                departmentSelect.style.display = 'block';
+            } else if (visibility === 'role') {
+                roleSelect.style.display = 'block';
+            }
+        });
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>

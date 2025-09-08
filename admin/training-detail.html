@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>培训详情 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 顶部通栏 - 直接嵌入 -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">安全培训平台</div>
+            <div class="role-switcher">
+                <button class="role-btn" onclick="switchRole('student')">学员端</button>
+                <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <span id="currentUser">管理员</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">退出</button>
+        </div>
+    </header>
+
+    <!-- 左侧菜单 - 直接嵌入 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li class="menu-item">
+                <a href="dashboard_simple.html" class="menu-link">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">首页</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="personnel.html" class="menu-link">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">人员管理</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="training.html" class="menu-link active">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">培训管理</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="content.html" class="menu-link">
+                    <span class="menu-icon">📄</span>
+                    <span class="menu-text">内容管理</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="statistics.html" class="menu-link">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">统计分析</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="settings.html" class="menu-link">
+                    <span class="menu-icon">⚙️</span>
+                    <span class="menu-text">系统设置</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="notifications.html" class="menu-link">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-text">通知管理</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="btn btn-secondary" onclick="goBack()">← 返回</button>
+                <div>
+                    <h1 class="page-title">培训详情</h1>
+                    <p class="page-subtitle">安全生产基础知识培训</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 培训基本信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">基本信息</h2>
+                <div>
+                    <button class="btn btn-primary btn-sm" onclick="editTraining()">编辑</button>
+                    <button class="btn btn-warning btn-sm" onclick="sendReminder()">催办</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div>
+                        <label class="form-label">培训名称</label>
+                        <p class="form-control-static">安全生产基础知识培训</p>
+                    </div>
+                    <div>
+                        <label class="form-label">培训类型</label>
+                        <p class="form-control-static"><span class="badge badge-info">长维人员培训</span></p>
+                    </div>
+                    <div>
+                        <label class="form-label">学时要求</label>
+                        <p class="form-control-static">8小时</p>
+                    </div>
+                    <div>
+                        <label class="form-label">培训状态</label>
+                        <p class="form-control-static"><span class="badge badge-success">进行中</span></p>
+                    </div>
+                    <div>
+                        <label class="form-label">创建时间</label>
+                        <p class="form-control-static">2024-01-10 09:00</p>
+                    </div>
+                    <div>
+                        <label class="form-label">截止时间</label>
+                        <p class="form-control-static">2024-02-10 18:00</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label class="form-label">培训描述</label>
+                    <p class="form-control-static">涵盖安全生产法律法规、安全管理制度、安全操作规程等基础内容，适用于所有长维人员。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 参与人员统计 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">参与人员统计</h2>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">👥</div>
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">总参与人数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">✅</div>
+                        <div class="stat-number">133</div>
+                        <div class="stat-label">已完成</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">⏳</div>
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">进行中</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">❌</div>
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">未开始</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 参与人员列表 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">参与人员列表</h2>
+                <div>
+                    <button class="btn btn-primary btn-sm" onclick="addParticipants()">添加人员</button>
+                    <button class="btn btn-warning btn-sm" onclick="exportParticipants()">导出名单</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>部门</th>
+                                <th>岗位</th>
+                                <th>进度</th>
+                                <th>学时</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>张三</td>
+                                <td>生产部</td>
+                                <td>操作员</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                    <small>100%</small>
+                                </td>
+                                <td>8小时</td>
+                                <td><span class="badge badge-success">已完成</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm">查看详情</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>李四</td>
+                                <td>技术部</td>
+                                <td>技术员</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 75%"></div>
+                                    </div>
+                                    <small>75%</small>
+                                </td>
+                                <td>6小时</td>
+                                <td><span class="badge badge-warning">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm">催办</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>王五</td>
+                                <td>维修部</td>
+                                <td>维修工</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 50%"></div>
+                                    </div>
+                                    <small>50%</small>
+                                </td>
+                                <td>4小时</td>
+                                <td><span class="badge badge-warning">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm">催办</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 培训内容 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">培训内容</h2>
+                <div>
+                    <button class="btn btn-primary btn-sm" onclick="addContent()">添加内容</button>
+                    <button class="btn btn-secondary btn-sm" onclick="previewContent()">预览</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>内容名称</th>
+                                <th>类型</th>
+                                <th>时长</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>安全生产法律法规</td>
+                                <td><span class="badge badge-info">视频</span></td>
+                                <td>2小时</td>
+                                <td><span class="badge badge-success">已发布</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">编辑</button>
+                                    <button class="btn btn-secondary btn-sm">预览</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>安全管理制度</td>
+                                <td><span class="badge badge-warning">文档</span></td>
+                                <td>1小时</td>
+                                <td><span class="badge badge-success">已发布</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">编辑</button>
+                                    <button class="btn btn-secondary btn-sm">预览</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>安全操作规程</td>
+                                <td><span class="badge badge-info">视频</span></td>
+                                <td>3小时</td>
+                                <td><span class="badge badge-success">已发布</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">编辑</button>
+                                    <button class="btn btn-secondary btn-sm">预览</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>事故案例分析</td>
+                                <td><span class="badge badge-danger">互动</span></td>
+                                <td>2小时</td>
+                                <td><span class="badge badge-success">已发布</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">编辑</button>
+                                    <button class="btn btn-secondary btn-sm">预览</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+        
+        // 编辑培训
+        function editTraining() {
+            window.location.href = 'training-edit.html';
+        }
+        
+        // 发送催办
+        function sendReminder() {
+            if (confirm('确定要发送催办通知吗？')) {
+                alert('催办通知已发送');
+            }
+        }
+        
+        // 添加参与人员
+        function addParticipants() {
+            alert('跳转到添加人员页面');
+        }
+        
+        // 导出参与人员
+        function exportParticipants() {
+            if (confirm('确定要导出参与人员名单吗？')) {
+                alert('正在导出...');
+            }
+        }
+        
+        // 添加培训内容
+        function addContent() {
+            alert('跳转到添加内容页面');
+        }
+        
+        // 预览培训内容
+        function previewContent() {
+            alert('打开内容预览');
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+
+        // 页面加载时获取培训信息
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTrainingInfo();
+        });
+
+        // 加载培训信息
+        function loadTrainingInfo() {
+            const trainingId = sessionStorage.getItem('currentTrainingId');
+            const trainingName = sessionStorage.getItem('currentTrainingName');
+            
+            if (trainingId && trainingName) {
+                // 更新页面标题
+                document.title = `${trainingName} - 培训详情 - 安全培训平台`;
+                
+                // 更新培训名称显示
+                const titleElements = document.querySelectorAll('.training-title');
+                titleElements.forEach(element => {
+                    element.textContent = trainingName;
+                });
+                
+                // 根据培训ID加载对应的培训数据
+                loadTrainingData(trainingId);
+            } else {
+                // 如果没有传递培训信息，显示默认信息或返回列表页
+                alert('未找到培训信息，将返回培训列表');
+                window.location.href = 'training.html';
+            }
+        }
+
+        // 加载培训数据
+        function loadTrainingData(trainingId) {
+            // 这里可以根据trainingId从API获取具体的培训数据
+            // 现在使用模拟数据
+            const trainingData = getTrainingDataById(trainingId);
+            
+            if (trainingData) {
+                updateTrainingDetails(trainingData);
+            }
+        }
+
+        // 根据ID获取培训数据（模拟数据）
+        function getTrainingDataById(trainingId) {
+            const trainingDataMap = {
+                'training_001': {
+                    name: '安全生产基础知识培训',
+                    type: '长维人员培训',
+                    description: '涵盖安全生产法律法规、安全管理制度等基础内容',
+                    participants: 156,
+                    completionRate: 85,
+                    duration: '8小时',
+                    status: '进行中',
+                    createTime: '2024-01-10',
+                    content: [
+                        { name: '安全生产法律法规', type: '视频', duration: '2小时', status: '已完成' },
+                        { name: '安全管理制度', type: '文档', duration: '1小时', status: '已完成' },
+                        { name: '事故案例分析', type: '视频', duration: '2小时', status: '已完成' },
+                        { name: '安全防护知识', type: '文档', duration: '1小时', status: '进行中' },
+                        { name: '应急处理流程', type: '视频', duration: '2小时', status: '未开始' }
+                    ]
+                },
+                'training_002': {
+                    name: '电气安全操作规程',
+                    type: '外委人员培训',
+                    description: '电气设备操作安全规范、事故预防措施',
+                    participants: 89,
+                    completionRate: 92,
+                    duration: '6小时',
+                    status: '进行中',
+                    createTime: '2024-01-08',
+                    content: [
+                        { name: '电气安全基础知识', type: '视频', duration: '1.5小时', status: '已完成' },
+                        { name: '电气设备操作规程', type: '文档', duration: '1小时', status: '已完成' },
+                        { name: '电气事故预防', type: '视频', duration: '1.5小时', status: '已完成' },
+                        { name: '电气安全防护', type: '文档', duration: '1小时', status: '已完成' },
+                        { name: '应急处理措施', type: '视频', duration: '1小时', status: '进行中' }
+                    ]
+                },
+                'training_003': {
+                    name: '消防安全培训',
+                    type: '长维人员培训',
+                    description: '消防器材使用、火灾逃生、应急处理',
+                    participants: 234,
+                    completionRate: 78,
+                    duration: '4小时',
+                    status: '进行中',
+                    createTime: '2024-01-12',
+                    content: [
+                        { name: '消防基础知识', type: '视频', duration: '1小时', status: '已完成' },
+                        { name: '消防器材使用', type: '视频', duration: '1小时', status: '已完成' },
+                        { name: '火灾逃生技能', type: '视频', duration: '1小时', status: '进行中' },
+                        { name: '应急处理流程', type: '文档', duration: '1小时', status: '未开始' }
+                    ]
+                },
+                'training_004': {
+                    name: '化工安全培训',
+                    type: '外委人员培训',
+                    description: '化工生产安全知识、危险化学品管理',
+                    participants: 67,
+                    completionRate: 100,
+                    duration: '5小时',
+                    status: '已完成',
+                    createTime: '2024-01-05',
+                    content: [
+                        { name: '化工安全基础知识', type: '视频', duration: '1.5小时', status: '已完成' },
+                        { name: '危险化学品管理', type: '文档', duration: '1小时', status: '已完成' },
+                        { name: '化工事故预防', type: '视频', duration: '1.5小时', status: '已完成' },
+                        { name: '应急处理措施', type: '文档', duration: '1小时', status: '已完成' }
+                    ]
+                }
+            };
+            
+            return trainingDataMap[trainingId];
+        }
+
+        // 更新培训详情
+        function updateTrainingDetails(data) {
+            // 更新基本信息
+            const typeElement = document.querySelector('.training-type');
+            const descElement = document.querySelector('.training-description');
+            const participantsElement = document.querySelector('.participants-count');
+            const completionElement = document.querySelector('.completion-rate');
+            const durationElement = document.querySelector('.training-duration');
+            const statusElement = document.querySelector('.training-status');
+            const timeElement = document.querySelector('.create-time');
+            
+            if (typeElement) typeElement.textContent = data.type;
+            if (descElement) descElement.textContent = data.description;
+            if (participantsElement) participantsElement.textContent = data.participants;
+            if (completionElement) completionElement.textContent = data.completionRate + '%';
+            if (durationElement) durationElement.textContent = data.duration;
+            if (statusElement) statusElement.textContent = data.status;
+            if (timeElement) timeElement.textContent = data.createTime;
+            
+            // 更新进度条
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.width = data.completionRate + '%';
+            }
+            
+            // 更新培训内容列表
+            updateTrainingContent(data.content);
+        }
+
+        // 更新培训内容列表
+        function updateTrainingContent(contentList) {
+            const tbody = document.querySelector('#trainingContentTable tbody');
+            if (tbody) {
+                tbody.innerHTML = '';
+                contentList.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td><span class="badge badge-info">${item.type}</span></td>
+                        <td>${item.duration}</td>
+                        <td><span class="badge ${getStatusBadgeClass(item.status)}">${item.status}</span></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="editContent('${item.name}')">编辑</button>
+                            <button class="btn btn-secondary btn-sm" onclick="viewContent('${item.name}')">查看</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        // 获取状态徽章样式
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case '已完成': return 'badge-success';
+                case '进行中': return 'badge-warning';
+                case '未开始': return 'badge-secondary';
+                default: return 'badge-secondary';
+            }
+        }
+
+        // 编辑内容
+        function editContent(contentName) {
+            alert(`编辑内容: ${contentName}`);
+        }
+
+        // 查看内容
+        function viewContent(contentName) {
+            alert(`查看内容: ${contentName}`);
+        }
+
+        // 返回培训列表
+        function backToTrainingList() {
+            window.location.href = 'training.html';
+        }
+    </script>
+</body>
+</html>
