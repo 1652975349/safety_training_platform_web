@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员首页 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+    <!-- 顶部通栏 - 直接嵌入 -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">安全培训平台</div>
+            <div class="role-switcher">
+                <button class="role-btn" onclick="switchRole('student')">学员端</button>
+                <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <span id="currentUser">管理员</span>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">退出</button>
+        </div>
+    </header>
+    
+    <!-- 左侧菜单 - 直接嵌入 -->
+    <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li class="menu-item">
+                <a href="dashboard_simple.html" class="menu-link active">
+                    <span class="menu-icon">🏠</span>
+                    <span class="menu-text">首页</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="personnel.html" class="menu-link">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">人员管理</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="training.html" class="menu-link">
+                    <span class="menu-icon">📚</span>
+                    <span class="menu-text">培训管理</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="content.html" class="menu-link">
+                    <span class="menu-icon">📄</span>
+                    <span class="menu-text">内容管理</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="statistics.html" class="menu-link">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">统计分析</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="settings.html" class="menu-link">
+                    <span class="menu-icon">⚙️</span>
+                    <span class="menu-text">系统设置</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="notifications.html" class="menu-link">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-text">通知管理</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">管理员首页</h1>
+            <p class="page-subtitle">安全培训平台管理概览</p>
+        </div>
+        
+        <!-- 统计概览 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">👥</div>
+                <div class="stat-number">1,256</div>
+                <div class="stat-label">注册学员</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">📚</div>
+                <div class="stat-number">48</div>
+                <div class="stat-label">培训课程</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📝</div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">进行中考试</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">📊</div>
+                <div class="stat-number">89%</div>
+                <div class="stat-label">平均通过率</div>
+            </div>
+        </div>
+        
+        <!-- 快速操作 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">快速操作</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <button class="btn btn-primary" style="padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">👥</span>
+                        <span>人员管理</span>
+                    </button>
+                    <button class="btn btn-success" style="padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">📚</span>
+                        <span>创建培训</span>
+                    </button>
+                    <button class="btn btn-warning" style="padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">📄</span>
+                        <span>上传课件</span>
+                    </button>
+                    <button class="btn btn-danger" style="padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">📊</span>
+                        <span>查看统计</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 培训管理概览 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">培训管理概览</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>培训名称</th>
+                                <th>类型</th>
+                                <th>参与人数</th>
+                                <th>完成率</th>
+                                <th>平均学时</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>安全生产基础知识培训</strong>
+                                        <br>
+                                        <small class="text-muted">长维人员必修培训</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">长维人员培训</span></td>
+                                <td>156人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 85%"></div>
+                                    </div>
+                                    <small>85%</small>
+                                </td>
+                                <td>8.5小时</td>
+                                <td><span class="badge badge-success">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">查看详情</button>
+                                    <button class="btn btn-warning btn-sm">催办</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>电气安全操作规程</strong>
+                                        <br>
+                                        <small class="text-muted">等级检修外委人员培训</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">外委人员培训</span></td>
+                                <td>89人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 92%"></div>
+                                    </div>
+                                    <small>92%</small>
+                                </td>
+                                <td>6.2小时</td>
+                                <td><span class="badge badge-success">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">查看详情</button>
+                                    <button class="btn btn-warning btn-sm">催办</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>消防安全培训</strong>
+                                        <br>
+                                        <small class="text-muted">全员消防安全培训</small>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">长维人员培训</span></td>
+                                <td>234人</td>
+                                <td>
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" style="width: 78%"></div>
+                                    </div>
+                                    <small>78%</small>
+                                </td>
+                                <td>4.8小时</td>
+                                <td><span class="badge badge-success">进行中</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">查看详情</button>
+                                    <button class="btn btn-warning btn-sm">催办</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 人员统计 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">人员统计</h2>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🏢</div>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">部门数量</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">👨‍🔧</div>
+                        <div class="stat-number">856</div>
+                        <div class="stat-label">长维人员</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">👷</div>
+                        <div class="stat-number">400</div>
+                        <div class="stat-label">外委人员</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">📋</div>
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">专业分类</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 最近活动 -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">最近活动</h2>
+            </div>
+            <div class="card-body">
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">👥</div>
+                        <div>
+                            <div><strong>张三</strong> 完成了 <strong>安全生产基础知识培训</strong></div>
+                            <small class="text-muted">2024-01-15 14:30</small>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="width: 40px; height: 40px; background: #e8f5e8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">📝</div>
+                        <div>
+                            <div><strong>李四</strong> 通过了 <strong>电气安全考试</strong> (成绩: 88分)</div>
+                            <small class="text-muted">2024-01-15 11:20</small>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="width: 40px; height: 40px; background: #fff3e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">📚</div>
+                        <div>
+                            <div>管理员创建了新培训: <strong>消防安全培训</strong></div>
+                            <small class="text-muted">2024-01-15 09:15</small>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="width: 40px; height: 40px; background: #fce4ec; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">👤</div>
+                        <div>
+                            <div><strong>王五</strong> 注册成为新学员</div>
+                            <small class="text-muted">2024-01-14 16:45</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>

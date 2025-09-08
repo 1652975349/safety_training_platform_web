@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - 安全培训平台</title>
+    <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+  <!-- 顶部通栏 - 直接嵌入 -->
+  <header class="header">
+    <div class="header-left">
+        <div class="logo">安全培训平台</div>
+        <div class="role-switcher">
+            <button class="role-btn" onclick="switchRole('student')">学员端</button>
+            <button class="role-btn active" onclick="switchRole('admin')">管理员端</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="user-info">
+            <div class="avatar">👤</div>
+            <span id="currentUser">管理员</span>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">退出</button>
+    </div>
+</header>
+
+<!-- 左侧菜单 - 直接嵌入 -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="menu-item">
+            <a href="dashboard_simple.html" class="menu-link">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">首页</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="personnel.html" class="menu-link">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">人员管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="training.html" class="menu-link">
+                <span class="menu-icon">📚</span>
+                <span class="menu-text">培训管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="content.html" class="menu-link">
+                <span class="menu-icon">📄</span>
+                <span class="menu-text">内容管理</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="statistics.html" class="menu-link">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">统计分析</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="settings.html" class="menu-link active">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">系统设置</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="notifications.html" class="menu-link">
+                <span class="menu-icon">🔔</span>
+                <span class="menu-text">通知管理</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="page-title">系统设置</h1>
+            <p class="page-subtitle">密码统一设定、管理员和子管理员权限设置</p>
+        </div>
+        
+        <!-- 设置导航 -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-primary active" onclick="showSettingsTab('password')">密码设置</button>
+                    <button class="btn btn-secondary" onclick="showSettingsTab('permission')">权限管理</button>
+                    <button class="btn btn-secondary" onclick="showSettingsTab('system')">系统配置</button>
+                    <!-- <button class="btn btn-secondary" onclick="showSettingsTab('security')">安全设置</button> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 密码设置 -->
+        <div class="card" id="passwordSettings">
+            <div class="card-header">
+                <h2 class="card-title">密码设置</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 20px;">统一密码设置</h4>
+                        <div class="form-group">
+                            <label class="form-label">新密码</label>
+                            <input type="password" class="form-control" placeholder="请输入新密码">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">确认密码</label>
+                            <input type="password" class="form-control" placeholder="请再次输入密码">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">适用范围</label>
+                            <select class="form-control">
+                                <option value="all">所有用户</option>
+                                <option value="students">仅学员</option>
+                                <option value="teachers">仅教师</option>
+                                <option value="department">指定部门</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary">设置统一密码</button>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">密码策略</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>密码长度至少8位</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>必须包含数字</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>必须包含字母</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox">
+                                    <span>必须包含特殊字符</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>密码有效期90天</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">保存策略</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 权限管理 -->
+        <div class="card" id="permissionSettings" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title">权限管理</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 20px;">管理员列表</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>角色</th>
+                                        <th>部门</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>张三</td>
+                                        <td><span class="badge badge-danger">超级管理员</span></td>
+                                        <td>系统部</td>
+                                        <td><span class="badge badge-success">正常</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">编辑</button>
+                                            <button class="btn btn-danger btn-sm">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>李四</td>
+                                        <td><span class="badge badge-warning">子管理员</span></td>
+                                        <td>生产部</td>
+                                        <td><span class="badge badge-success">正常</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">编辑</button>
+                                            <button class="btn btn-danger btn-sm">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>王五</td>
+                                        <td><span class="badge badge-warning">子管理员</span></td>
+                                        <td>技术部</td>
+                                        <td><span class="badge badge-success">正常</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">编辑</button>
+                                            <button class="btn btn-danger btn-sm">删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary">添加管理员</button>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">权限配置</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                            <h5>子管理员权限</h5>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>人员管理</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>培训管理</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>内容管理</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox">
+                                    <span>统计分析</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox">
+                                    <span>系统设置</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>通知管理</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">保存权限</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 系统配置 -->
+        <div class="card" id="systemSettings" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title">系统配置</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 20px;">基本设置</h4>
+                        <div class="form-group">
+                            <label class="form-label">系统名称</label>
+                            <input type="text" class="form-control" value="安全培训平台">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">系统描述</label>
+                            <textarea class="form-control" rows="3">数字化安全培训系统</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">默认头像</label>
+                            <input type="text" class="form-control" value="/images/default-avatar.png">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">最大文件上传大小(MB)</label>
+                            <input type="number" class="form-control" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">允许上传的文件类型</label>
+                            <input type="text" class="form-control" value="jpg,jpeg,png,gif,mp4,avi,mov,pdf,doc,docx">
+                        </div>
+                        <button class="btn btn-primary">保存设置</button>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">学习设置</h4>
+                        <div class="form-group">
+                            <label class="form-label">默认学时要求(小时)</label>
+                            <input type="number" class="form-control" value="8">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">考试及格分数</label>
+                            <input type="number" class="form-control" value="80">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">证书有效期(天)</label>
+                            <input type="number" class="form-control" value="365">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">积分规则</label>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                <div style="margin-bottom: 10px;">
+                                    <label class="form-label">学习积分(分/小时)</label>
+                                    <input type="number" class="form-control" value="10">
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <label class="form-label">考试积分(分/次)</label>
+                                    <input type="number" class="form-control" value="50">
+                                </div>
+                                <div>
+                                    <label class="form-label">认证积分(分/次)</label>
+                                    <input type="number" class="form-control" value="200">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary">保存设置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 安全设置 -->
+        <!-- <div class="card" id="securitySettings" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title">安全设置</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 20px;">登录安全</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>启用人脸识别</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>启用签名验证</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox">
+                                    <span>启用短信验证</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>登录失败锁定</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>会话超时自动退出</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary">保存设置</button>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">防作弊设置</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>考试人脸识别</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>学习过程监控</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox">
+                                    <span>屏幕录制</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>禁止切换窗口</span>
+                                </label>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span>随机题目顺序</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary">保存设置</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- 数据备份 -->
+        <!-- <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">数据备份</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div>
+                        <h4 style="margin-bottom: 20px;">自动备份</h4>
+                        <div class="form-group">
+                            <label class="form-label">备份频率</label>
+                            <select class="form-control">
+                                <option value="daily">每日</option>
+                                <option value="weekly">每周</option>
+                                <option value="monthly">每月</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">备份时间</label>
+                            <input type="time" class="form-control" value="02:00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">保留天数</label>
+                            <input type="number" class="form-control" value="30">
+                        </div>
+                        <button class="btn btn-primary">保存设置</button>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">手动备份</h4>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">💾</div>
+                            <p style="color: #666; margin-bottom: 20px;">手动创建系统数据备份</p>
+                            <button class="btn btn-success">立即备份</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">备份记录</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>备份时间</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2024-01-15 02:00</td>
+                                        <td>125MB</td>
+                                        <td><span class="badge badge-success">成功</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">下载</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2024-01-14 02:00</td>
+                                        <td>123MB</td>
+                                        <td><span class="badge badge-success">成功</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">下载</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // 显示设置标签页
+        function showSettingsTab(tab) {
+            // 隐藏所有标签页
+            document.getElementById('passwordSettings').style.display = 'none';
+            document.getElementById('permissionSettings').style.display = 'none';
+            document.getElementById('systemSettings').style.display = 'none';
+            document.getElementById('securitySettings').style.display = 'none';
+            
+            // 重置所有按钮状态
+            document.querySelectorAll('.btn').forEach(btn => {
+                if (btn.textContent.includes('密码设置') || btn.textContent.includes('权限管理') || 
+                    btn.textContent.includes('系统配置') || btn.textContent.includes('安全设置')) {
+                    btn.classList.remove('active');
+                    btn.classList.add('btn-secondary');
+                }
+            });
+            
+            // 显示选中的标签页
+            if (tab === 'password') {
+                document.getElementById('passwordSettings').style.display = 'block';
+                event.target.classList.add('active');
+                event.target.classList.remove('btn-secondary');
+            } else if (tab === 'permission') {
+                document.getElementById('permissionSettings').style.display = 'block';
+                event.target.classList.add('active');
+                event.target.classList.remove('btn-secondary');
+            } else if (tab === 'system') {
+                document.getElementById('systemSettings').style.display = 'block';
+                event.target.classList.add('active');
+                event.target.classList.remove('btn-secondary');
+            } else if (tab === 'security') {
+                document.getElementById('securitySettings').style.display = 'block';
+                event.target.classList.add('active');
+                event.target.classList.remove('btn-secondary');
+            }
+        }
+        
+        // 角色切换功能
+        function switchRole(role) {
+            // 移除所有active类
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 添加active类到当前按钮
+            event.target.classList.add('active');
+            
+            // 根据角色跳转到对应页面
+            if (role === 'student') {
+                window.location.href = '../student/dashboard_simple.html';
+            } else if (role === 'admin') {
+                window.location.href = 'dashboard_simple.html';
+            }
+        }
+
+        // 退出功能
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        // 更新用户信息
+        function updateUserInfo(username) {
+            document.getElementById('currentUser').textContent = username;
+        }
+    </script>
+</body>
+</html>
